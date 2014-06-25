@@ -1012,5 +1012,7 @@ namespace fyiReporting.RdlDesign
 				OnSelectionChanged(this, e);
 			}
 		}
+
+        public OpenPOS.Model.Reports.IRelatorio CurrentReport { get; set; }
 	}
 }

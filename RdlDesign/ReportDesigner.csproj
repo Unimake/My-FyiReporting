@@ -78,7 +78,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <BaseAddress>285212672</BaseAddress>
     <FileAlignment>4096</FileAlignment>
     <DebugType>full</DebugType>
@@ -125,8 +125,12 @@
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data">
       <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Drawing">
       <Name>System.Drawing</Name>
@@ -206,6 +210,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DialogNewTable.ru-RU.resx">
       <DependentUpon>DialogNewTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DialogSave.resx">
+      <DependentUpon>DialogSave.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DialogToolOptions.ru-RU.resx">
       <DependentUpon>DialogToolOptions.cs</DependentUpon>
@@ -353,6 +360,9 @@
     <EmbeddedResource Include="VisibilityCtl.ru-RU.resx">
       <DependentUpon>VisibilityCtl.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Images\document-open.png" />
     <None Include="Images\document-print.png" />
     <None Include="Images\document-save.png" />
@@ -370,6 +380,7 @@
     <None Include="Images\document-new.png" />
     <None Include="Images\chart.png" />
     <None Include="Images\Image.png" />
+    <None Include="Images\document-delete.png" />
     <Content Include="selecttool.gif" />
     <Content Include="html.gif" />
     <Content Include="image.gif" />
@@ -455,6 +466,12 @@
     </Compile>
     <Compile Include="DialogNewTable.Designer.cs">
       <DependentUpon>DialogNewTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DialogSave.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DialogSave.designer.cs">
+      <DependentUpon>DialogSave.cs</DependentUpon>
     </Compile>
     <Compile Include="DialogToolOptions.Designer.cs">
       <DependentUpon>DialogToolOptions.cs</DependentUpon>
@@ -1040,6 +1057,30 @@
     <ProjectReference Include="..\RdlViewer\RdlViewer.csproj">
       <Project>{D99145B1-CB6C-41F5-BA86-723325145FB5}</Project>
       <Name>RdlViewer</Name>
+    </ProjectReference>
+    <ProjectReference Include="Z:\OpenPOS\OpenPOSBr\trunk\fontes\OpenPOS\CommonTypes\OpenPOS.CommonTypes\OpenPOS.CommonTypes.csproj">
+      <Project>{8aec5212-ecd6-42bd-b6f0-aaacda508c72}</Project>
+      <Name>OpenPOS.CommonTypes</Name>
+    </ProjectReference>
+    <ProjectReference Include="Z:\OpenPOS\OpenPOSBr\trunk\fontes\OpenPOS\Core\OpenPOS.Core\OpenPOS.Core.csproj">
+      <Project>{dc6b5290-e824-4bb4-a863-09945763ae95}</Project>
+      <Name>OpenPOS.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="Z:\OpenPOS\OpenPOSBr\trunk\fontes\OpenPOS\Desktop.ComponentModel\OpenPOS.Desktop.ComponentModel\OpenPOS.Desktop.ComponentModel.csproj">
+      <Project>{25b9c3b4-b1a8-41b6-a6ac-8d87229cd595}</Project>
+      <Name>OpenPOS.Desktop.ComponentModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="Z:\OpenPOS\OpenPOSBr\trunk\fontes\OpenPOS\Model\OpenPOS.Model\OpenPOS.Model.csproj">
+      <Project>{f32bfb09-cdfd-4539-8124-881c7adbd19e}</Project>
+      <Name>OpenPOS.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="Z:\OpenPOS\OpenPOS\trunk\fontes\OpenPOS\Unimake\Unimake\Unimake.csproj">
+      <Project>{6b631b34-c2de-4c70-9d21-02d698ca853c}</Project>
+      <Name>Unimake</Name>
+    </ProjectReference>
+    <ProjectReference Include="Z:\OpenPOS\OpenPOS\trunk\fontes\System\Data\Generic\System.Data.Generic\System.Data.Generic.csproj">
+      <Project>{3a915c55-c947-43b7-97e8-c2a356ca385c}</Project>
+      <Name>System.Data.Generic</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

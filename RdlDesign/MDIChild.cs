@@ -32,6 +32,7 @@ using System.Xml;
 using fyiReporting.RDL;
 using fyiReporting.RdlDesign.Resources;
 using fyiReporting.RdlViewer;
+using System.Collections.Generic;
 
 namespace fyiReporting.RdlDesign
 {
@@ -40,8 +41,6 @@ namespace fyiReporting.RdlDesign
     /// </summary>
     internal partial class MDIChild 
     {
-
-
         public delegate void RdlChangeHandler(object sender, EventArgs e);
         public event RdlChangeHandler OnSelectionChanged;
         public event RdlChangeHandler OnSelectionMoved;
@@ -50,6 +49,7 @@ namespace fyiReporting.RdlDesign
         public event DesignCtl.OpenSubreportEventHandler OnOpenSubreport;
         public event DesignCtl.HeightEventHandler OnHeightChanged;
 
+        bool _flagFileSaveAs;
         Uri _SourceFile;
         // TabPage for this MDI Child
 
@@ -182,14 +182,29 @@ namespace fyiReporting.RdlDesign
 
         public bool FileSave()
         {
-            Uri file = SourceFile;
-            if (file == null || file.LocalPath == "")		// if no file name then do SaveAs
-            {
-                return FileSaveAs();
-            }
             string rdl = GetRdlText();
+            string sql = this.rdlDesigner.ReportDocument.GetElementsByTagName("CommandText")[0].InnerXml;
+            List<SqlColumn> columns = DesignerUtility.GetSqlColumns(sql);
+            OpenPOS.Model.Reports.IRelatorio current = rdlDesigner.CurrentReport;
 
-            return FileSave(file, rdl);
+            if(current == null) current = new OpenPOS.Data.Reports.Relatorio();
+
+            SaveDialogResult sdresult = SaveDialog.Show(current.Nome, current.Grupo == null ? (OpenPOS.GUID)"" : current.Grupo.GUID, columns, current);
+
+            if(sdresult.DialogResult == DialogResult.OK)
+            {
+                current.Nome = sdresult.Title;
+                current.Grupo = sdresult.Group;
+                current.Filtros = sdresult.Filtros;
+                current.Script = rdl;
+                current.Template = sdresult.Template;
+                if(_flagFileSaveAs) current.New = true;
+
+                current.Save();
+                Editor.CurrentReport = current;
+                return true;
+            }
+            return false;
         }
 
         private bool FileSave(Uri file, string rdl)
@@ -299,34 +314,10 @@ namespace fyiReporting.RdlDesign
 
         public bool FileSaveAs()
         {
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = Strings.MDIChild_FileSaveAs_RDLFilter;
-            sfd.FilterIndex = 1;
-
-            Uri file = SourceFile;
-
-            sfd.FileName = file == null ? "*.rdl" : file.LocalPath;
-            try
-            {
-                if (sfd.ShowDialog(this) != DialogResult.OK)
-                    return false;
-
-                // User wants to save!
-                string rdl = GetRdlText();
-                if (FileSave(new Uri(sfd.FileName), rdl))
-                {	// Save was successful
-                    Text = sfd.FileName;
-                    Tab.Text = Path.GetFileName(sfd.FileName);
-                    _SourceFile = new Uri(sfd.FileName);
-                    Tab.ToolTipText = sfd.FileName;
-                    return true;
-                }
-            }
-            finally
-            {
-                sfd.Dispose();
-            }
-            return false;
+            _flagFileSaveAs = true;
+            bool result = FileSave();
+            _flagFileSaveAs = false;
+            return result;
         }
 
         public string GetRdlText()
@@ -573,5 +564,21 @@ namespace fyiReporting.RdlDesign
 
         }
 
+        internal bool DeleteReport()
+        {
+            if(Editor.CurrentReport == null)
+            {
+                OpenPOS.MessageBox.ShowWarning("No report was selected");
+                return false;
+            }
+
+            if(OpenPOS.MessageBox.AskYesNo("Are you sure to delete the current report?", "Delete report") == System.Windows.Forms.DialogResult.Yes)
+            {
+                Editor.CurrentReport.Delete();
+                return true;
+            }
+
+            return false;
+        }
     }
 }

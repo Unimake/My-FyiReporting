@@ -68,7 +68,7 @@ namespace fyiReporting.RdlDesign
     /// designer.Show() 
     /// </code>
     /// </example>
-    public partial class RdlDesigner :  IMessageFilter
+    public partial class RdlDesigner: IMessageFilter
     {
         static readonly string IpcFileName = @"\fyiIpcData4563.txt"; // TODO: change file name with every release
 
@@ -101,13 +101,9 @@ namespace fyiReporting.RdlDesign
         // Tool bar  --- if you add to this list LOOK AT INIT TOOLBAR FIRST
         bool bSuppressChange = false;
         private Color _SaveExprBackColor = Color.LightGray;
-       
+
         private ToolStripButton ctlInsertCurrent = null;
         private ToolStripMenuItem ctlMenuInsertCurrent = null;
-
-        private RdlDesigner()
-        {
-        }
 
         /// <summary>
         /// Open a file programmatically when the designer is already open.
@@ -137,7 +133,7 @@ namespace fyiReporting.RdlDesign
         public void OpenFile(Uri filePath)
         {
             CreateMDIChild(filePath, null, false);
-            RecentFilesMenu();	
+            RecentFilesMenu();
         }
 
         /// <summary>
@@ -154,7 +150,7 @@ namespace fyiReporting.RdlDesign
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load(filePath.AbsolutePath);
 
-            foreach (XmlNode node in xmlDoc.GetElementsByTagName("ConnectString"))
+            foreach(XmlNode node in xmlDoc.GetElementsByTagName("ConnectString"))
             {
                 node.InnerText = connectionString;
             }
@@ -162,7 +158,7 @@ namespace fyiReporting.RdlDesign
             xmlDoc.Save(filePath.AbsolutePath);
 
             CreateMDIChild(filePath, null, false);
-            RecentFilesMenu();	
+            RecentFilesMenu();
         }
 
         // TODO: Event raise on file save (with path and name to saved file)
@@ -170,12 +166,7 @@ namespace fyiReporting.RdlDesign
 
         public event RdlDesign.RdlDesignerSavedFileEventHandler SavedFileEvent;
 
-        /// <summary>
-        /// Designer constructor.
-        /// </summary>
-        /// <param name="IpcChannelPortName">The IPC channel that the designer will use.</param>
-        /// <param name="openPreviousSession">True or False open the previous reports that were open in the designer.</param>
-        public RdlDesigner(string IpcChannelPortName, bool openPreviousSession)
+        public RdlDesigner()
         {
             InitializeComponent();
 
@@ -185,9 +176,8 @@ namespace fyiReporting.RdlDesign
             // Intialize the recent file menu
             RecentFilesMenu();
             propertiesWindowsToolStripMenuItem.Checked = _ShowProperties;
-            IsMdiContainer = true;  
+            IsMdiContainer = true;
 
-            
             Application.AddMessageFilter(this);
 
             this.MdiChildActivate += new EventHandler(RdlDesigner_MdiChildActivate);
@@ -195,11 +185,28 @@ namespace fyiReporting.RdlDesign
             _GetPassword = new RDL.NeedPassword(this.GetPassword);
 
             InitToolbar();
-            
+
+            DesignTabChanged(this, new EventArgs());		// force toolbar to get updated
+        }
+
+        public RdlDesigner(OpenPOS.GUID guid)
+            : this()
+        {
+            CurrentGUID = guid;
+        }
+
+        /// <summary>
+        /// Designer constructor.
+        /// </summary>
+        /// <param name="IpcChannelPortName">The IPC channel that the designer will use.</param>
+        /// <param name="openPreviousSession">True or False open the previous reports that were open in the designer.</param>
+        public RdlDesigner(bool openPreviousSession)
+            : this()
+        {
             // open up the current files if any
-            if (_CurrentFiles != null && openPreviousSession == true)
+            if(_CurrentFiles != null && openPreviousSession == true)
             {
-                foreach (Uri file in _CurrentFiles)
+                foreach(Uri file in _CurrentFiles)
                 {
                     CreateMDIChild(file, null, false);
                 }
@@ -207,8 +214,9 @@ namespace fyiReporting.RdlDesign
             }
 
             DesignTabChanged(this, new EventArgs());		// force toolbar to get updated
-    
+
         }
+
         /// <summary>
         /// Handles mousewheel processing when window under mousewheel doesn't have focus
         /// </summary>
@@ -219,12 +227,12 @@ namespace fyiReporting.RdlDesign
 #if MONO
             return false;
 #else
-            if (m.Msg == 0x20a)
+            if(m.Msg == 0x20a)
             {
                 // WM_MOUSEWHEEL, find the control at screen position m.LParam
                 Point pos = new Point(m.LParam.ToInt32() & 0xffff, m.LParam.ToInt32() >> 16);
                 IntPtr hWnd = WindowFromPoint(pos);
-                if (hWnd != IntPtr.Zero && hWnd != m.HWnd && Control.FromHandle(hWnd) != null)
+                if(hWnd != IntPtr.Zero && hWnd != m.HWnd && Control.FromHandle(hWnd) != null)
                 {
                     SendMessage(hWnd, m.Msg, m.WParam, m.LParam);
                     return true;
@@ -241,7 +249,7 @@ namespace fyiReporting.RdlDesign
         [DllImport("user32.dll")]
         private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
 #endif
-        
+
         private DockStyle GetPropertiesDockStyle(string l)
         {
             DockStyle ds;
@@ -262,26 +270,26 @@ namespace fyiReporting.RdlDesign
             InitToolbarFont();
             InitToolbarFontSize();
 
-           zoomToolStripComboBox1.Items.AddRange(StaticLists.ZoomList);
-                   
+            zoomToolStripComboBox1.Items.AddRange(StaticLists.ZoomList);
+
             System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(RdlDesigner));
 
-            
+
             mainTC.Visible = _ShowTabbedInterface;
-            if (_ShowTabbedInterface)
+            if(_ShowTabbedInterface)
             {   // When tabbed we force the mdi children to be maximized (on reset)
-                foreach (MDIChild mc in this.MdiChildren)
+                foreach(MDIChild mc in this.MdiChildren)
                 {
                     mc.WindowState = FormWindowState.Maximized;
                 }
             }
-           
-           
+
+
             mainTB.Name = "mainTB";
-    
+
             //			mainTB.Size = new Size(440,20);
-      
-          
+
+
         }
         /// <summary>
         /// Handles right mouse button processing on current tab
@@ -291,26 +299,26 @@ namespace fyiReporting.RdlDesign
         void mainTC_MouseClick(object sender, MouseEventArgs e)
         {
             TabControl tc = sender as TabControl;
-            if (tc == null)
+            if(tc == null)
                 return;
 
-            if (e.Button != MouseButtons.Right)
+            if(e.Button != MouseButtons.Right)
                 return;
             Point p = e.Location;
             int current = -1;
-            for (int i = 0; i < tc.TabCount; i++)
+            for(int i = 0; i < tc.TabCount; i++)
             {
                 Rectangle r = tc.GetTabRect(i);
-                if (r.Contains(p))
+                if(r.Contains(p))
                 {
                     current = i;
                     break;
                 }
             }
-            if (current != tc.SelectedIndex)
+            if(current != tc.SelectedIndex)
                 return;             // didn't find the tab
 
-			ContextMenuTB.Show(tc, p);
+            ContextMenuTB.Show(tc, p);
         }
 
         void mainTB_SizeChanged(object sender, EventArgs e)
@@ -331,9 +339,9 @@ namespace fyiReporting.RdlDesign
 
         void mdi_Activate(MDIChild mc)
         {
-            if (mc == null)
+            if(mc == null)
                 return;
-            if (bMono)
+            if(bMono)
             {
                 mc.Activate();
                 this.Refresh(); //Forces a synchronous redraw of all controls
@@ -373,7 +381,7 @@ namespace fyiReporting.RdlDesign
         {
             get
             {
-                if (_HelpUrl != null && _HelpUrl.Length > 0)
+                if(_HelpUrl != null && _HelpUrl.Length > 0)
                     return _HelpUrl;
                 return DefaultHelpUrl;
             }
@@ -427,7 +435,7 @@ namespace fyiReporting.RdlDesign
             }
             set
             {
-                if (_PropertiesLocation == value)
+                if(_PropertiesLocation == value)
                     return;         // didn't change nothing to do
                 _PropertiesLocation = value;
 
@@ -435,7 +443,7 @@ namespace fyiReporting.RdlDesign
                 mainProperties.Dock = _PropertiesLocation;
                 // Adjust the size of the property window so that it doesn't
                 //   fill the whole main window
-                switch (_PropertiesLocation)
+                switch(_PropertiesLocation)
                 {
                     case DockStyle.Left:
                     case DockStyle.Right:
@@ -472,7 +480,7 @@ namespace fyiReporting.RdlDesign
         {
             get
             {
-                if (_SupportUrl != null && _SupportUrl.Length > 0)
+                if(_SupportUrl != null && _SupportUrl.Length > 0)
                     return _SupportUrl;
                 return DefaultSupportUrl;
             }
@@ -569,12 +577,12 @@ namespace fyiReporting.RdlDesign
             }
         }
 
-               
+
 
         void fxExpr_MouseLeave(object sender, EventArgs e)
         {
             Label lbl = sender as Label;
-            if (lbl == null)
+            if(lbl == null)
                 return;
 
             lbl.BackColor = _SaveExprBackColor;
@@ -583,7 +591,7 @@ namespace fyiReporting.RdlDesign
         void fxExpr_MouseEnter(object sender, EventArgs e)
         {
             Label lbl = sender as Label;
-            if (lbl == null)
+            if(lbl == null)
                 return;
             _SaveExprBackColor = lbl.BackColor;
             lbl.BackColor = Color.LightGray;
@@ -594,17 +602,17 @@ namespace fyiReporting.RdlDesign
         void fxExpr_Click(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null ||
+            if(mc == null ||
                 mc.DesignTab != "design" || mc.DrawCtl.SelectedCount != 1 ||
                 mc.Editor == null)
                 return;
 
             XmlNode tn = mc.DrawCtl.SelectedList[0];
 
-            using (DialogExprEditor de = new DialogExprEditor(mc.DrawCtl, ctlEditTextbox.Text, tn))
+            using(DialogExprEditor de = new DialogExprEditor(mc.DrawCtl, ctlEditTextbox.Text, tn))
             {
                 // Display the UI editor dialog
-                if (de.ShowDialog(this) == DialogResult.OK)
+                if(de.ShowDialog(this) == DialogResult.OK)
                 {
                     ctlEditTextbox.Text = de.Expression;
                     mc.Editor.SetSelectedText(de.Expression);
@@ -631,10 +639,10 @@ namespace fyiReporting.RdlDesign
             ctl.UpColor = this.BackColor;
             ctl.Click += eh;	// click handler for all inserts
 
-            if (bImg == null)
+            if(bImg == null)
             {
                 ctl.Text = t;
-                using (Graphics g = ctl.CreateGraphics())
+                using(Graphics g = ctl.CreateGraphics())
                 {
                     SizeF fs = g.MeasureString(ctl.Text, ctl.Font);
                     ctl.Height = (int)fs.Height + 8;	// 8 is for margins
@@ -665,13 +673,13 @@ namespace fyiReporting.RdlDesign
             return ctl;
         }
 
-       
+
         private int InitToolbarFont()
         {
             // Create the font
-            
-            
-            foreach (FontFamily ff in FontFamily.Families)
+
+
+            foreach(FontFamily ff in FontFamily.Families)
             {
                 fontToolStripComboBox1.Items.Add(ff.Name);
             }
@@ -682,7 +690,7 @@ namespace fyiReporting.RdlDesign
         private int InitToolbarFontSize()
         {
             // Create the font
-           
+
             string[] sizes = new string[] { "8", "9", "10", "11", "12", "14", "16", "18", "20", "22", "24", "26", "28", "36", "48", "72" };
             fontSizeToolStripComboBox1.Items.AddRange(sizes);
 
@@ -692,11 +700,11 @@ namespace fyiReporting.RdlDesign
         void tip_Popup_Fore(object sender, PopupEventArgs e)
         {
             ToolTip tt = sender as ToolTip;
-            if (tt == null)
+            if(tt == null)
                 return;
             string title = null;
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc != null && mc.DesignTab == "design" && mc.DrawCtl.SelectedCount == 1)
+            if(mc != null && mc.DesignTab == "design" && mc.DrawCtl.SelectedCount == 1)
             {
                 title = foreColorPicker1.Text;
             }
@@ -707,10 +715,10 @@ namespace fyiReporting.RdlDesign
         private void ctlForeColor_Change(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
-            if (!bSuppressChange)
+            if(!bSuppressChange)
             {
                 mc.ApplyStyleToSelected("Color", foreColorPicker1.Text);
                 SetProperties(mc);
@@ -721,12 +729,12 @@ namespace fyiReporting.RdlDesign
         void tip_Popup_Back(object sender, PopupEventArgs e)
         {
             ToolTip tt = sender as ToolTip;
-            if (tt == null)
+            if(tt == null)
                 return;
 
             string title = null;
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc != null && mc.DesignTab == "design" && mc.DrawCtl.SelectedCount == 1)
+            if(mc != null && mc.DesignTab == "design" && mc.DrawCtl.SelectedCount == 1)
             {
                 title = backColorPicker1.Text;
             }
@@ -734,13 +742,13 @@ namespace fyiReporting.RdlDesign
             tt.ToolTipTitle = title;
         }
 
-        
-        
+
+
         private bool OkToSave()
         {
-            foreach (MDIChild mc in this.MdiChildren)
+            foreach(MDIChild mc in this.MdiChildren)
             {
-                if (!mc.OkToClose())
+                if(!mc.OkToClose())
                     return false;
             }
             return true;
@@ -764,13 +772,13 @@ namespace fyiReporting.RdlDesign
         private void menuFileClose_Click(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc != null)
+            if(mc != null)
                 mc.Close();
         }
 
         private void menuFileExit_Click(object sender, EventArgs e)
         {
-            if (!OkToSave())
+            if(!OkToSave())
                 return;
             SaveStartupState();
             menuToolsCloseProcess(false);
@@ -781,57 +789,55 @@ namespace fyiReporting.RdlDesign
 
         private void menuFileOpen_Click(object sender, EventArgs e)
         {
-            MDIChild mc = this.ActiveMdiChild as MDIChild;
-            OpenFileDialog ofd = new OpenFileDialog();
-            if (mc != null)
+            OpenPOS.Desktop.SearchWindowResult result = OpenPOS.Desktop.SearchWindow.Show(DesignerUtility.DisplayReports());
+
+            if(result.Success)
             {
-                try
-                {
-                    ofd.InitialDirectory = Path.GetDirectoryName(mc.SourceFile.LocalPath);
-                }
-                catch
-                {
-                }
-            }
-            ofd.DefaultExt = "rdl";
-            ofd.Filter = Strings.RdlDesigner_menuFileOpen_Click_ReportFilesFilter;
-            ofd.FilterIndex = 1;
-            ofd.CheckFileExists = true;
-            ofd.Multiselect = true;
-            try
-            {
-                if (ofd.ShowDialog(this) == DialogResult.OK)
-                {
-                    foreach (string file in ofd.FileNames)
-                    {
-                        CreateMDIChild(new Uri(file), null, false);
-                    }
-                    RecentFilesMenu();		// update the menu for recent files
-                }
-            }
-            finally
-            {
-                ofd.Dispose();
+                //criar o arquivo temporário 
+                CreateMDIChild(result.GUID, null, false);
             }
         }
 
-        // Create an MDI child.   Only creates it if not already open.
-        private MDIChild CreateMDIChild(Uri file, string rdl, bool bMenuUpdate)
+        private MDIChild CreateMDIChild(OpenPOS.GUID guid, string rdl, bool bMenuUpdate)
         {
             MDIChild mcOpen = null;
-            if (file != null)
-            {
 
-                foreach (MDIChild mc in this.MdiChildren)
+            Uri file = new Uri(String.Format("{0}.rdl", Path.GetTempFileName()));
+            OpenPOS.Model.Reports.IRelatorio relatorio = null;
+
+            if(guid.IsValid())
+            {
+                relatorio = new OpenPOS.Data.Reports.Relatorio(guid);
+
+                using(FileStream stream = File.OpenWrite(file.LocalPath))
                 {
-                    if (mc.SourceFile != null && file.LocalPath == mc.SourceFile.LocalPath)
-                    {							// we found it
-                        mcOpen = mc;
-                        break;
-                    }
+                    byte[] bArray = OpenPOS.Convert.ToByteArray(relatorio.Script);
+                    stream.Write(bArray, 0, bArray.Length);
+                    stream.Flush();
+                    stream.Close();
                 }
             }
-            if (mcOpen == null)
+            else
+            {
+                using(FileStream stream = File.OpenWrite(file.LocalPath))
+                {
+                    byte[] bArray = UTF8Encoding.UTF8.GetBytes(rdl);
+                    stream.Write(bArray, 0, bArray.Length);
+                    stream.Flush();
+                    stream.Close();
+                }
+            }
+
+            foreach(MDIChild mc in this.MdiChildren)
+            {
+                if(mc.SourceFile != null && file.LocalPath == mc.SourceFile.LocalPath)
+                {							// we found it
+                    mcOpen = mc;
+                    break;
+                }
+            }
+
+            if(mcOpen == null)
             {
                 MDIChild mc = null;
                 try
@@ -845,10 +851,84 @@ namespace fyiReporting.RdlDesign
                     mc.OnHeightChanged += new DesignCtl.HeightEventHandler(HeightChanged);
 
                     mc.MdiParent = this;
-                    if (this._ShowTabbedInterface)
+                    if(this._ShowTabbedInterface)
                         mc.WindowState = FormWindowState.Maximized;
                     mc.Viewer.GetDataSourceReferencePassword = _GetPassword;
-                    if (file != null)
+                    mc.Viewer.Folder = Path.GetDirectoryName(file.LocalPath);
+                    mc.SourceFile = file;
+                    if(relatorio != null) mc.Text = relatorio.Nome;
+                    else mc.Text = Path.GetFileName(file.LocalPath);
+                    mc.Viewer.Folder = Path.GetDirectoryName(file.LocalPath);
+                    mc.Viewer.ReportName = Path.GetFileNameWithoutExtension(file.LocalPath);
+
+                    mc.ShowEditLines(this._ShowEditLines);
+                    mc.ShowReportItemOutline = this.ShowReportItemOutline;
+                    mc.ShowPreviewWaitDialog(this._ShowPreviewWaitDialog);
+                    // add to toolbar tab
+                    TabPage tp = new TabPage();
+                    tp.Location = new System.Drawing.Point(0, 0);
+                    tp.Name = mc.Text;
+                    tp.TabIndex = 1;
+                    tp.Text = mc.Text;
+                    tp.Tag = mc;                // tie the mdichild to the tabpage
+                    tp.ToolTipText = file == null ? "" : file.LocalPath;
+                    mainTC.Controls.Add(tp);
+                    mc.Tab = tp;
+
+                    mc.Show();
+                    mcOpen = mc;
+                    GetEditor().CurrentReport = relatorio;
+
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    if(mc != null)
+                        mc.Close();
+                    return null;
+                }
+            }
+            else
+            {
+                mcOpen.Activate();
+            }
+            return mcOpen;
+        }
+
+        // Create an MDI child.   Only creates it if not already open.
+        private MDIChild CreateMDIChild(Uri file, string rdl, bool bMenuUpdate)
+        {
+            MDIChild mcOpen = null;
+            if(file != null)
+            {
+
+                foreach(MDIChild mc in this.MdiChildren)
+                {
+                    if(mc.SourceFile != null && file.LocalPath == mc.SourceFile.LocalPath)
+                    {							// we found it
+                        mcOpen = mc;
+                        break;
+                    }
+                }
+            }
+            if(mcOpen == null)
+            {
+                MDIChild mc = null;
+                try
+                {
+                    mc = new MDIChild(this.ClientRectangle.Width * 3 / 5, this.ClientRectangle.Height * 3 / 5);
+                    mc.OnSelectionChanged += new MDIChild.RdlChangeHandler(SelectionChanged);
+                    mc.OnSelectionMoved += new MDIChild.RdlChangeHandler(SelectionMoved);
+                    mc.OnReportItemInserted += new MDIChild.RdlChangeHandler(ReportItemInserted);
+                    mc.OnDesignTabChanged += new MDIChild.RdlChangeHandler(DesignTabChanged);
+                    mc.OnOpenSubreport += new DesignCtl.OpenSubreportEventHandler(OpenSubReportEvent);
+                    mc.OnHeightChanged += new DesignCtl.HeightEventHandler(HeightChanged);
+
+                    mc.MdiParent = this;
+                    if(this._ShowTabbedInterface)
+                        mc.WindowState = FormWindowState.Maximized;
+                    mc.Viewer.GetDataSourceReferencePassword = _GetPassword;
+                    if(file != null)
                     {
                         mc.Viewer.Folder = Path.GetDirectoryName(file.LocalPath);
                         mc.SourceFile = file;
@@ -880,10 +960,10 @@ namespace fyiReporting.RdlDesign
                     mcOpen = mc;
 
                 }
-                catch (Exception ex)
+                catch(Exception ex)
                 {
                     MessageBox.Show(ex.Message);
-                    if (mc != null)
+                    if(mc != null)
                         mc.Close();
                     return null;
                 }
@@ -899,224 +979,224 @@ namespace fyiReporting.RdlDesign
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
             string tab = "";
-            if (mc != null)
+            if(mc != null)
                 tab = mc.DesignTab;
             bool bEnableEdit = false;
             bool bEnableDesign = false;
             bool bEnablePreview = false;
             bool bShowProp = _ShowProperties;
-            switch (tab)
+            switch(tab)
             {
                 case "edit":
                     bEnableEdit = true;
-                    if (_PropertiesAutoHide)
+                    if(_PropertiesAutoHide)
                         bShowProp = false;
                     break;
                 case "design":
                     bEnableDesign = true;
                     break;
                 case "preview":
-                    if (_PropertiesAutoHide)
+                    if(_PropertiesAutoHide)
                         bShowProp = false;
                     bEnablePreview = true;
                     break;
             }
-            if (!bEnableEdit && this._ValidateRdl != null)
+            if(!bEnableEdit && this._ValidateRdl != null)
             {
                 this._ValidateRdl.Close();
             }
             mainProperties.Visible = mainSP.Visible = bShowProp;
-            if (leftAlignToolStripButton2 != null)
+            if(leftAlignToolStripButton2 != null)
             {
                 leftAlignToolStripButton2.Enabled = bEnableDesign;
             }
-            if (centerAlignToolStripButton2 != null)
+            if(centerAlignToolStripButton2 != null)
             {
                 centerAlignToolStripButton2.Enabled = bEnableDesign;
             }
-            if (rightAlignToolStripButton3 != null)
+            if(rightAlignToolStripButton3 != null)
             {
                 rightAlignToolStripButton3.Enabled = bEnableDesign;
             }
-            if (boldToolStripButton1 != null)
+            if(boldToolStripButton1 != null)
             {
                 boldToolStripButton1.Enabled = bEnableDesign;
             }
-            if (italiacToolStripButton1 != null)
+            if(italiacToolStripButton1 != null)
             {
                 italiacToolStripButton1.Enabled = bEnableDesign;
             }
-            if (underlineToolStripButton2 != null)
+            if(underlineToolStripButton2 != null)
             {
                 underlineToolStripButton2.Enabled = bEnableDesign;
             }
-            if (fontToolStripComboBox1 != null)
+            if(fontToolStripComboBox1 != null)
             {
                 fontToolStripComboBox1.Enabled = bEnableDesign;
             }
-            if (fontSizeToolStripComboBox1 != null)
+            if(fontSizeToolStripComboBox1 != null)
             {
                 fontSizeToolStripComboBox1.Enabled = bEnableDesign;
             }
-            if (foreColorPicker1 != null)
+            if(foreColorPicker1 != null)
             {
                 foreColorPicker1.Enabled = bEnableDesign;
             }
-            if (backColorPicker1 != null)
+            if(backColorPicker1 != null)
             {
                 backColorPicker1.Enabled = bEnableDesign;
             }
-            if (cutToolStripButton1 != null)
+            if(cutToolStripButton1 != null)
             {
                 cutToolStripButton1.Enabled = bEnableDesign | bEnableEdit;
             }
-            if (copyToolStripButton1 != null)
+            if(copyToolStripButton1 != null)
             {
                 copyToolStripButton1.Enabled = bEnableDesign | bEnableEdit | bEnablePreview;
             }
-            if (undoToolStripButton1 != null)
+            if(undoToolStripButton1 != null)
             {
                 undoToolStripButton1.Enabled = bEnableDesign | bEnableEdit;
             }
-            if (pasteToolStripButton1 != null)
+            if(pasteToolStripButton1 != null)
             {
                 pasteToolStripButton1.Enabled = bEnableDesign | bEnableEdit;
             }
-            if (printToolStripButton2 != null)
+            if(printToolStripButton2 != null)
             {
                 printToolStripButton2.Enabled = bEnablePreview;
             }
-            if (textboxToolStripButton1 != null)
+            if(textboxToolStripButton1 != null)
             {
                 textboxToolStripButton1.Enabled = bEnableDesign;
             }
-            if (selectToolStripButton2 != null)
+            if(selectToolStripButton2 != null)
             {
                 selectToolStripButton2.Enabled = bEnablePreview;
                 selectToolStripButton2.Checked = mc == null ? false : mc.SelectionTool;
             }
-            if (chartToolStripButton1 != null)
+            if(chartToolStripButton1 != null)
             {
                 chartToolStripButton1.Enabled = bEnableDesign;
             }
-            if (rectangleToolStripButton1 != null)
+            if(rectangleToolStripButton1 != null)
             {
                 rectangleToolStripButton1.Enabled = bEnableDesign;
             }
-            if (tableToolStripButton1 != null)
+            if(tableToolStripButton1 != null)
             {
                 tableToolStripButton1.Enabled = bEnableDesign;
             }
-            if (matrixToolStripButton1 != null)
+            if(matrixToolStripButton1 != null)
             {
                 matrixToolStripButton1.Enabled = bEnableDesign;
             }
-            if (listToolStripButton1 != null)
+            if(listToolStripButton1 != null)
             {
                 listToolStripButton1.Enabled = bEnableDesign;
             }
-            if (lineToolStripButton1 != null)
+            if(lineToolStripButton1 != null)
             {
                 lineToolStripButton1.Enabled = bEnableDesign;
             }
-            if (imageToolStripButton1 != null)
+            if(imageToolStripButton1 != null)
             {
                 imageToolStripButton1.Enabled = bEnableDesign;
             }
-            if (subreportToolStripButton1 != null)
+            if(subreportToolStripButton1 != null)
             {
                 subreportToolStripButton1.Enabled = bEnableDesign;
             }
-            if (pdfToolStripButton2 != null)
+            if(pdfToolStripButton2 != null)
             {
                 pdfToolStripButton2.Enabled = bEnablePreview;
             }
-            if (TifToolStripButton2 != null)
+            if(TifToolStripButton2 != null)
             {
                 TifToolStripButton2.Enabled = bEnablePreview;
             }
-            if (XmlToolStripButton2 != null)
+            if(XmlToolStripButton2 != null)
             {
                 XmlToolStripButton2.Enabled = bEnablePreview;
             }
-            if (htmlToolStripButton2 != null)
+            if(htmlToolStripButton2 != null)
             {
                 htmlToolStripButton2.Enabled = bEnablePreview;
             }
-            if (MhtToolStripButton2 != null)
+            if(MhtToolStripButton2 != null)
             {
                 MhtToolStripButton2.Enabled = bEnablePreview;
             }
-            if (CsvToolStripButton2 != null)
+            if(CsvToolStripButton2 != null)
             {
                 CsvToolStripButton2.Enabled = bEnablePreview;
             }
-            if (excelToolStripButton2 != null)
+            if(excelToolStripButton2 != null)
             {
                 excelToolStripButton2.Enabled = bEnablePreview;
             }
-            if (RtfToolStripButton2 != null)
+            if(RtfToolStripButton2 != null)
             {
                 RtfToolStripButton2.Enabled = bEnablePreview;
             }
-            if (chartToolStripMenuItem != null)
+            if(chartToolStripMenuItem != null)
             {
                 chartToolStripMenuItem.Enabled = bEnableDesign;
             }
-            if (gridToolStripMenuItem != null)
+            if(gridToolStripMenuItem != null)
             {
                 gridToolStripMenuItem.Enabled = bEnableDesign;
             }
-            if (imageToolStripMenuItem != null)
+            if(imageToolStripMenuItem != null)
             {
                 imageToolStripMenuItem.Enabled = bEnableDesign;
             }
-            if (lineToolStripMenuItem != null)
+            if(lineToolStripMenuItem != null)
             {
                 lineToolStripMenuItem.Enabled = bEnableDesign;
             }
-            if (listToolStripMenuItem != null)
+            if(listToolStripMenuItem != null)
             {
                 listToolStripMenuItem.Enabled = bEnableDesign;
             }
-            if (matrixToolStripMenuItem != null)
+            if(matrixToolStripMenuItem != null)
             {
                 matrixToolStripMenuItem.Enabled = bEnableDesign;
             }
-            if (rectangleToolStripMenuItem != null)
+            if(rectangleToolStripMenuItem != null)
             {
                 rectangleToolStripMenuItem.Enabled = bEnableDesign;
             }
-            if (subReportToolStripMenuItem != null)
+            if(subReportToolStripMenuItem != null)
             {
                 subReportToolStripMenuItem.Enabled = bEnableDesign;
             }
-            if (tableToolStripMenuItem != null)
+            if(tableToolStripMenuItem != null)
             {
                 tableToolStripMenuItem.Enabled = bEnableDesign;
             }
-            if (textboxToolStripMenuItem != null)
+            if(textboxToolStripMenuItem != null)
             {
                 textboxToolStripMenuItem.Enabled = bEnableDesign;
             }
-            if (barCodeBooklandToolStripMenuItem != null)
+            if(barCodeBooklandToolStripMenuItem != null)
             {
                 barCodeBooklandToolStripMenuItem.Enabled = bEnableDesign;
             }
-            if (barCodeEAN13ToolStripMenuItem != null)
+            if(barCodeEAN13ToolStripMenuItem != null)
             {
                 barCodeEAN13ToolStripMenuItem.Enabled = bEnableDesign;
             }
 
             this.EnableEditTextBox();
 
-            if (zoomToolStripComboBox1 != null)
+            if(zoomToolStripComboBox1 != null)
             {
                 zoomToolStripComboBox1.Enabled = bEnablePreview;
                 string zText = "Actual Size";
-                if (mc != null)
+                if(mc != null)
                 {
-                    switch (mc.ZoomMode)
+                    switch(mc.ZoomMode)
                     {
                         case ZoomEnum.FitWidth:
                             zText = "Fit Width";
@@ -1125,7 +1205,7 @@ namespace fyiReporting.RdlDesign
                             zText = "Fit Page";
                             break;
                         case ZoomEnum.UseZoom:
-                            if (mc.Zoom == 1)
+                            if(mc.Zoom == 1)
                                 zText = "Actual Size";
                             else
                                 zText = string.Format("{0:0}", mc.Zoom * 100f);
@@ -1135,8 +1215,10 @@ namespace fyiReporting.RdlDesign
                 }
             }
             // when no active sheet
-            if (this.saveToolStripButton1 != null)
+            if(this.saveToolStripButton1 != null)
                 this.saveToolStripButton1.Enabled = mc != null;
+
+            this.toolStripButtonDelete.Enabled = mc != null;
 
             // Update the status and position information
             SetStatusNameAndPosition();
@@ -1145,7 +1227,7 @@ namespace fyiReporting.RdlDesign
         private void ctlUnderline_Click(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.ApplyStyleToSelected("TextDecoration", underlineToolStripButton2.Checked ? "Underline" : "None");
@@ -1157,10 +1239,10 @@ namespace fyiReporting.RdlDesign
         private void ctlFont_Change(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
-            if (!bSuppressChange)
+            if(!bSuppressChange)
             {
                 mc.ApplyStyleToSelected("FontFamily", fontToolStripComboBox1.Text);
                 SetProperties(mc);
@@ -1171,10 +1253,10 @@ namespace fyiReporting.RdlDesign
         private void ctlFontSize_Change(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
-            if (!bSuppressChange)
+            if(!bSuppressChange)
             {
                 mc.ApplyStyleToSelected("FontSize", fontSizeToolStripComboBox1.Text + "pt");
                 SetProperties(mc);
@@ -1185,7 +1267,7 @@ namespace fyiReporting.RdlDesign
         private void ctlSelectTool_Click(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.SelectionTool = selectToolStripButton2.Checked;
@@ -1196,9 +1278,9 @@ namespace fyiReporting.RdlDesign
         private void ctlBackColor_Change(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
-            if (!bSuppressChange)
+            if(!bSuppressChange)
             {
                 mc.ApplyStyleToSelected("BackgroundColor", backColorPicker1.Text);
                 SetProperties(mc);
@@ -1210,11 +1292,11 @@ namespace fyiReporting.RdlDesign
         private void ctlZoom_Change(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
             mc.SetFocus();
 
-            switch (zoomToolStripComboBox1.Text)
+            switch(zoomToolStripComboBox1.Text)
             {
                 case "Actual Size":
                     mc.Zoom = 1;
@@ -1233,7 +1315,7 @@ namespace fyiReporting.RdlDesign
                         z = Convert.ToSingle(s) / 100f;
                         mc.Zoom = z;
                     }
-                    catch (Exception ex)
+                    catch(Exception ex)
                     {
                         MessageBox.Show(ex.Message, Strings.RdlDesigner_Show_ZoomValueInvalid);
                     }
@@ -1246,21 +1328,21 @@ namespace fyiReporting.RdlDesign
             MDIChild mc = this.ActiveMdiChild as MDIChild;
             bool bEnable = false;
 
-            if (this.ctlEditTextbox == null || mc == null ||
+            if(this.ctlEditTextbox == null || mc == null ||
                 mc.DesignTab != "design" || mc.DrawCtl.SelectedCount != 1)
             { }
             else
             {
                 XmlNode tn = mc.DrawCtl.SelectedList[0] as XmlNode;
-                if (tn != null && tn.Name == "Textbox")
+                if(tn != null && tn.Name == "Textbox")
                 {
                     ctlEditTextbox.Text = mc.DrawCtl.GetElementValue(tn, "Value", "");
                     bEnable = true;
                 }
             }
-            if (ctlEditTextbox != null)
+            if(ctlEditTextbox != null)
             {
-                if (!bEnable)
+                if(!bEnable)
                     ctlEditTextbox.Text = "";
                 ctlEditTextbox.Enabled = bEnable;
                 fxToolStripLabel1.Enabled = bEnable;
@@ -1270,7 +1352,7 @@ namespace fyiReporting.RdlDesign
         private void ctlItalic_Click(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.ApplyStyleToSelected("FontStyle", italiacToolStripButton1.Checked ? "Italic" : "Normal");
@@ -1282,19 +1364,19 @@ namespace fyiReporting.RdlDesign
         private void ReportItemInserted(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
             {
                 return;
             }
 
             // turn off the current selection after an item is inserted
-            if (ctlInsertCurrent != null)
+            if(ctlInsertCurrent != null)
             {
                 ctlInsertCurrent.Checked = false;
                 mc.CurrentInsert = null;
                 ctlInsertCurrent = null;
             }
-            if (ctlMenuInsertCurrent != null)
+            if(ctlMenuInsertCurrent != null)
             {
                 ctlMenuInsertCurrent.Checked = false;
                 mc.CurrentInsert = null;
@@ -1305,11 +1387,11 @@ namespace fyiReporting.RdlDesign
         private void OpenSubReportEvent(object sender, SubReportEventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             Uri file = new Uri(mc.Viewer.Folder);
-            if (e.SubReportName[0] == Path.DirectorySeparatorChar)
+            if(e.SubReportName[0] == Path.DirectorySeparatorChar)
             {
                 file = new Uri(file.LocalPath + e.SubReportName);
             }
@@ -1323,7 +1405,7 @@ namespace fyiReporting.RdlDesign
 
         private void HeightChanged(object sender, HeightEventArgs e)
         {
-            if (e.Height == null)
+            if(e.Height == null)
             {
                 SetProperties(ActiveMdiChild as MDIChild);
 
@@ -1332,21 +1414,21 @@ namespace fyiReporting.RdlDesign
             }
 
             var rinfo = new RegionInfo(CultureInfo.CurrentCulture.LCID);
-	        var unit = rinfo.IsMetric ? Strings.RdlDesigner_Status_cm : Strings.RdlDesigner_Status_in;
-			var h = DesignXmlDraw.GetSize(e.Height) / DesignXmlDraw.POINTSIZED;
+            var unit = rinfo.IsMetric ? Strings.RdlDesigner_Status_cm : Strings.RdlDesigner_Status_in;
+            var h = DesignXmlDraw.GetSize(e.Height) / DesignXmlDraw.POINTSIZED;
 
-			if (rinfo.IsMetric)
-			{
-				h *= 2.54f;
-			}
-			
-			statusPosition.Text = string.Format("   {1}={0:0.00}{2}        ", h, Strings.RdlDesigner_Status_Height, unit);
+            if(rinfo.IsMetric)
+            {
+                h *= 2.54f;
+            }
+
+            statusPosition.Text = string.Format("   {1}={0:0.00}{2}        ", h, Strings.RdlDesigner_Status_Height, unit);
         }
 
         private void SelectionMoved(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             SetStatusNameAndPosition();
@@ -1355,10 +1437,10 @@ namespace fyiReporting.RdlDesign
         private void SelectionChanged(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
             // handle edit tab first
-            if (mc.RdlEditor.DesignTab == "edit")
+            if(mc.RdlEditor.DesignTab == "edit")
             {
                 SetStatusNameAndPosition();
                 return;
@@ -1370,33 +1452,33 @@ namespace fyiReporting.RdlDesign
             this.EnableEditTextBox();	// handling enabling/disabling of textbox
 
             StyleInfo si = mc.SelectedStyle;
-            if (si == null)
+            if(si == null)
                 return;
 
-            if (centerAlignToolStripButton2 != null)
+            if(centerAlignToolStripButton2 != null)
                 centerAlignToolStripButton2.Checked = si.TextAlign == TextAlignEnum.Center ? true : false;
-            if (leftAlignToolStripButton2 != null)
+            if(leftAlignToolStripButton2 != null)
                 leftAlignToolStripButton2.Checked = si.TextAlign == TextAlignEnum.Left ? true : false;
-            if (rightAlignToolStripButton3 != null)
+            if(rightAlignToolStripButton3 != null)
                 rightAlignToolStripButton3.Checked = si.TextAlign == TextAlignEnum.Right ? true : false;
-            if (boldToolStripButton1 != null)
+            if(boldToolStripButton1 != null)
                 boldToolStripButton1.Checked = si.IsFontBold() ? true : false;
-            if (italiacToolStripButton1 != null)
+            if(italiacToolStripButton1 != null)
                 italiacToolStripButton1.Checked = si.FontStyle == FontStyleEnum.Italic ? true : false;
-            if (underlineToolStripButton2 != null)
+            if(underlineToolStripButton2 != null)
                 underlineToolStripButton2.Checked = si.TextDecoration == TextDecorationEnum.Underline ? true : false;
-            if (fontToolStripComboBox1 != null)
+            if(fontToolStripComboBox1 != null)
                 fontToolStripComboBox1.Text = si.FontFamily;
-            if (fontSizeToolStripComboBox1 != null)
+            if(fontSizeToolStripComboBox1 != null)
             {
                 string rs = string.Format(NumberFormatInfo.InvariantInfo, "{0:0.#}", si.FontSize);
                 fontSizeToolStripComboBox1.Text = rs;
             }
-            if (foreColorPicker1 != null)
+            if(foreColorPicker1 != null)
             {
                 foreColorPicker1.Text = si.Color.IsEmpty ? si.ColorText : ColorTranslator.ToHtml(si.Color);
             }
-            if (backColorPicker1 != null)
+            if(backColorPicker1 != null)
             {
                 backColorPicker1.Text = si.BackgroundColor.IsEmpty ? si.BackgroundColorText : ColorTranslator.ToHtml(si.BackgroundColor);
             }
@@ -1408,11 +1490,11 @@ namespace fyiReporting.RdlDesign
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
             bool bEnable = false;
-            if (mc != null && mc.DesignTab == "design")
+            if(mc != null && mc.DesignTab == "design")
                 bEnable = true;
 
             this.dataSourcesToolStripMenuItem1.Enabled = this.dataSetsToolStripMenuItem.Enabled = this.embeddedImagesToolStripMenuItem.Enabled = bEnable;
-            if (!bEnable)
+            if(!bEnable)
                 return;
 
             // Run thru all the existing DataSets
@@ -1423,14 +1505,14 @@ namespace fyiReporting.RdlDesign
             DesignXmlDraw draw = mc.DrawCtl;
             XmlNode rNode = draw.GetReportNode();
             XmlNode dsNode = draw.GetNamedChildNode(rNode, "DataSets");
-            if (dsNode != null)
+            if(dsNode != null)
             {
-                foreach (XmlNode dNode in dsNode)
+                foreach(XmlNode dNode in dsNode)
                 {
-                    if (dNode.Name != "DataSet")
+                    if(dNode.Name != "DataSet")
                         continue;
                     XmlAttribute nAttr = dNode.Attributes["Name"];
-                    if (nAttr == null)	// shouldn't really happen
+                    if(nAttr == null)	// shouldn't really happen
                         continue;
                     dataSetsToolStripMenuItem.DropDownItems.Add(new ToolStripMenuItem(nAttr.Value, null,
                         new EventHandler(this.dataSetsToolStripMenuItem_Click)));
@@ -1441,16 +1523,16 @@ namespace fyiReporting.RdlDesign
         private void dataSourcesToolStripMenuItem1_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.StartUndoGroup(Strings.RdlDesigner_Undo_DataSourcesDialog);
-            using (DialogDataSources dlgDS = new DialogDataSources(mc.SourceFile, mc.DrawCtl))
+            using(DialogDataSources dlgDS = new DialogDataSources(mc.SourceFile, mc.DrawCtl))
             {
                 dlgDS.StartPosition = FormStartPosition.CenterParent;
                 DialogResult dr = dlgDS.ShowDialog();
                 mc.Editor.EndUndoGroup(dr == DialogResult.OK);
-                if (dr == DialogResult.OK)
+                if(dr == DialogResult.OK)
                     mc.Modified = true;
             }
         }
@@ -1458,11 +1540,11 @@ namespace fyiReporting.RdlDesign
         private void dataSetsToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null || mc.DrawCtl == null || mc.ReportDocument == null)
+            if(mc == null || mc.DrawCtl == null || mc.ReportDocument == null)
                 return;
 
             ToolStripMenuItem menu = sender as ToolStripMenuItem;
-            if (menu == null)
+            if(menu == null)
                 return;
             mc.Editor.StartUndoGroup(Strings.RdlDesigner_Undo_DataSetDialog);
 
@@ -1478,57 +1560,57 @@ namespace fyiReporting.RdlDesign
             // find the requested dataset: the menu text equals the name of the dataset
             int dsCount = 0;		// count of the datasets
             string onlyOneDsname = null;
-            foreach (XmlNode dNode in dsNode)
+            foreach(XmlNode dNode in dsNode)
             {
-                if (dNode.Name != "DataSet")
+                if(dNode.Name != "DataSet")
                     continue;
                 XmlAttribute nAttr = dNode.Attributes["Name"];
-                if (nAttr == null)	// shouldn't really happen
+                if(nAttr == null)	// shouldn't really happen
                     continue;
-                if (dsCount == 0)
+                if(dsCount == 0)
                     onlyOneDsname = nAttr.Value;		// we keep track of 1st name; 
 
                 dsCount++;
-                if (nAttr.Value == dsname)
+                if(nAttr.Value == dsname)
                     dataset = dNode;
             }
 
             bool bNew = false;
-            if (dataset == null)	// This must be the new menu item
+            if(dataset == null)	// This must be the new menu item
             {
                 dataset = draw.CreateElement(dsNode, "DataSet", null);	// create empty node
                 bNew = true;
             }
             ds.Add(dataset);
 
-            using (PropertyDialog pd = new PropertyDialog(mc.DrawCtl, ds, PropertyTypeEnum.DataSets))
+            using(PropertyDialog pd = new PropertyDialog(mc.DrawCtl, ds, PropertyTypeEnum.DataSets))
             {
                 DialogResult dr = pd.ShowDialog();
-                if (pd.Changed || dr == DialogResult.OK)
+                if(pd.Changed || dr == DialogResult.OK)
                 {
-                    if (dsCount == 1)
+                    if(dsCount == 1)
                     // if we used to just have one DataSet we may need to fix up DataRegions 
                     //	that were defaulting to that name
                     {
                         dsCount = 0;
                         bool bUseName = false;
-                        foreach (XmlNode dNode in dsNode)
+                        foreach(XmlNode dNode in dsNode)
                         {
-                            if (dNode.Name != "DataSet")
+                            if(dNode.Name != "DataSet")
                                 continue;
                             XmlAttribute nAttr = dNode.Attributes["Name"];
-                            if (nAttr == null)	// shouldn't really happen
+                            if(nAttr == null)	// shouldn't really happen
                                 continue;
 
                             dsCount++;
-                            if (onlyOneDsname == nAttr.Value)
+                            if(onlyOneDsname == nAttr.Value)
                                 bUseName = true;
                         }
-                        if (bUseName && dsCount > 1)
+                        if(bUseName && dsCount > 1)
                         {
-                            foreach (XmlNode drNode in draw.ReportNames.ReportItems)
+                            foreach(XmlNode drNode in draw.ReportNames.ReportItems)
                             {
-                                switch (drNode.Name)
+                                switch(drNode.Name)
                                 {
                                     // If a DataRegion doesn't have a dataset name specified use previous one
                                     case "Table":
@@ -1536,7 +1618,7 @@ namespace fyiReporting.RdlDesign
                                     case "Matrix":
                                     case "Chart":
                                         XmlNode aNode = draw.GetNamedChildNode(drNode, "DataSetName");
-                                        if (aNode == null)
+                                        if(aNode == null)
                                             draw.CreateElement(drNode, "DataSetName", onlyOneDsname);
                                         break;
                                     default:
@@ -1547,14 +1629,14 @@ namespace fyiReporting.RdlDesign
                     }
                     mc.Modified = true;
                 }
-                else if (bNew)	// if canceled and new DataSet get rid of temp node
+                else if(bNew)	// if canceled and new DataSet get rid of temp node
                 {
                     dsNode.RemoveChild(dataset);
                 }
-                if (pd.Delete)	// user must have hit a delete button for this to get set
+                if(pd.Delete)	// user must have hit a delete button for this to get set
                     dsNode.RemoveChild(dataset);
 
-                if (!dsNode.HasChildNodes)		// If no dataset exists we remove DataSets
+                if(!dsNode.HasChildNodes)		// If no dataset exists we remove DataSets
                     draw.RemoveElement(rNode, "DataSets");
 
                 mc.Editor.EndUndoGroup(pd.Changed || dr == DialogResult.OK);
@@ -1564,60 +1646,60 @@ namespace fyiReporting.RdlDesign
         private void embeddedImagesToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.StartUndoGroup(Strings.RdlDesigner_Undo_EmbeddedImagesDialog);
-            using (DialogEmbeddedImages dlgEI = new DialogEmbeddedImages(mc.DrawCtl))
+            using(DialogEmbeddedImages dlgEI = new DialogEmbeddedImages(mc.DrawCtl))
             {
                 dlgEI.StartPosition = FormStartPosition.CenterParent;
                 DialogResult dr = dlgEI.ShowDialog();
                 mc.Editor.EndUndoGroup(dr == DialogResult.OK);
-                if (dr == DialogResult.OK)
+                if(dr == DialogResult.OK)
                     mc.Modified = true;
             }
         }
 
         private void menuFileNewDataSourceRef_Click(object sender, System.EventArgs e)
         {
-            using (DialogDataSourceRef dlgDS = new DialogDataSourceRef())
+            using(DialogDataSourceRef dlgDS = new DialogDataSourceRef())
             {
                 dlgDS.StartPosition = FormStartPosition.CenterParent;
                 dlgDS.ShowDialog();
-                if (dlgDS.DialogResult == DialogResult.Cancel)
+                if(dlgDS.DialogResult == DialogResult.Cancel)
                     return;
             }
         }
 
         private void menuFileNewReport_Click(object sender, System.EventArgs e)
         {
-            using (DialogDatabase dlgDB = new DialogDatabase(this))
+            using(DialogDatabase dlgDB = new DialogDatabase(this))
             {
                 dlgDB.StartPosition = FormStartPosition.CenterParent;
                 //dlgDB.FormBorderStyle = FormBorderStyle.SizableToolWindow;
 
                 // show modally
                 dlgDB.ShowDialog();
-                if (dlgDB.DialogResult == DialogResult.Cancel)
+                if(dlgDB.DialogResult == DialogResult.Cancel)
                     return;
                 string rdl = dlgDB.ResultReport;
 
                 // Create the MDI child using the RDL syntax the wizard generates
-                MDIChild mc = CreateMDIChild(null, rdl, false);
+                MDIChild mc = CreateMDIChild((Uri)null, rdl, false);
                 mc.Modified = true;
                 // Force building of report names for new reports
-                if (mc.DrawCtl.ReportNames == null) { }
+                if(mc.DrawCtl.ReportNames == null) { }
             }
         }
 
         private void menuFilePrint_Click(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
             {
                 return;
             }
-            if (printChild != null)			// already printing
+            if(printChild != null)			// already printing
             {
                 MessageBox.Show(Strings.RdlDesigner_Show_PrintOneFile, Strings.RdlDesigner_Show_RDLDesign);
                 return;
@@ -1634,43 +1716,43 @@ namespace fyiReporting.RdlDesign
             pd.DefaultPageSettings.Landscape = mc.PageWidth > mc.PageHeight ? true : false;
 
             // Set the paper size.
-            if (mc.SourceRdl != null)
+            if(mc.SourceRdl != null)
             {
                 System.Xml.XmlDocument docxml = new System.Xml.XmlDocument();
                 docxml.LoadXml(mc.SourceRdl);
-                                
+
                 float height = 11;
                 float width = 8.5f;
                 XmlNodeList heightList = docxml.GetElementsByTagName("PageHeight");
-                for (int i = 0; i < heightList.Count; i++)
+                for(int i = 0; i < heightList.Count; i++)
                 {
-                  height = Conversions.MeasurementTypeAsHundrethsOfAnInch(heightList[i].InnerText);
+                    height = Conversions.MeasurementTypeAsHundrethsOfAnInch(heightList[i].InnerText);
                 }
 
                 XmlNodeList widthList = docxml.GetElementsByTagName("PageWidth");
-                for (int i = 0; i < widthList.Count; i++)
+                for(int i = 0; i < widthList.Count; i++)
                 {
-					width = Conversions.MeasurementTypeAsHundrethsOfAnInch(widthList[i].InnerText);
+                    width = Conversions.MeasurementTypeAsHundrethsOfAnInch(widthList[i].InnerText);
                 }
 
                 pd.DefaultPageSettings.PaperSize = new PaperSize("Custom", (int)width, (int)height);
             }
-            using (PrintDialog dlg = new PrintDialog())
+            using(PrintDialog dlg = new PrintDialog())
             {
                 dlg.Document = pd;
                 dlg.AllowSelection = true;
                 dlg.AllowSomePages = true;
-                if (dlg.ShowDialog() == DialogResult.OK)
+                if(dlg.ShowDialog() == DialogResult.OK)
                 {
                     try
                     {
-                        if (pd.PrinterSettings.PrintRange == PrintRange.Selection)
+                        if(pd.PrinterSettings.PrintRange == PrintRange.Selection)
                         {
                             pd.PrinterSettings.FromPage = mc.PageCurrent;
                         }
                         mc.Print(pd);
                     }
-                    catch (Exception ex)
+                    catch(Exception ex)
                     {
                         MessageBox.Show(Strings.RdlDesigner_Show_PrintError + ex.Message, Strings.RdlDesigner_Show_RDLDesign);
                     }
@@ -1682,29 +1764,26 @@ namespace fyiReporting.RdlDesign
         private void menuFileSave_Click(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+
+            if(mc == null)
                 return;
 
-            if (!mc.FileSave())
+            if(!mc.FileSave())
                 return;
 
-            if (this.SavedFileEvent != null)
-            {
-                this.SavedFileEvent(this, new RdlDesignerSavedFileEvent(mc.SourceFile));
-            }
-            
-            NoteRecentFiles(mc.SourceFile, true);
-
-            if (mc.Editor != null)
+            if(mc.Editor != null)
                 mc.Editor.ClearUndo();
 
-            return;
+            mc.Text = mc.Editor.CurrentReport.Nome;
+            mc.Tab.Text = mc.Editor.CurrentReport.Nome;
+
+            MessageBox.Show("The report was successfully saved.");
         }
 
         private void exportToolStripMenuItemCsv_Click(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Export(fyiReporting.RDL.OutputPresentationType.CSV);
@@ -1714,7 +1793,7 @@ namespace fyiReporting.RdlDesign
         private void exportToolStripMenuItemExcel_Click(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Export(fyiReporting.RDL.OutputPresentationType.Excel);
@@ -1724,7 +1803,7 @@ namespace fyiReporting.RdlDesign
         private void exportToolStripMenuItemRtf_Click(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Export(fyiReporting.RDL.OutputPresentationType.RTF);
@@ -1734,7 +1813,7 @@ namespace fyiReporting.RdlDesign
         private void exportToolStripMenuItemXml_Click(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Export(fyiReporting.RDL.OutputPresentationType.XML);
@@ -1744,7 +1823,7 @@ namespace fyiReporting.RdlDesign
         private void exportToolStripMenuItemHtml_Click(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Export(fyiReporting.RDL.OutputPresentationType.HTML);
@@ -1754,7 +1833,7 @@ namespace fyiReporting.RdlDesign
         private void exportToolStripMenuItemMHtml_Click(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Export(fyiReporting.RDL.OutputPresentationType.MHTML);
@@ -1769,10 +1848,10 @@ namespace fyiReporting.RdlDesign
         private void PdfExport(bool oldStyle)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
-            if (oldStyle)
+            if(oldStyle)
             {
                 mc.Export(fyiReporting.RDL.OutputPresentationType.PDFOldStyle);
             }
@@ -1786,7 +1865,7 @@ namespace fyiReporting.RdlDesign
         private void exportToolStripMenuItemTif_Click(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Export(fyiReporting.RDL.OutputPresentationType.TIF);
@@ -1796,10 +1875,10 @@ namespace fyiReporting.RdlDesign
         private void menuFileSaveAs_Click(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
-            if (!mc.FileSaveAs())
+            if(!mc.FileSaveAs())
                 return;
 
             mc.Viewer.Folder = Path.GetDirectoryName(mc.SourceFile.LocalPath);
@@ -1807,14 +1886,14 @@ namespace fyiReporting.RdlDesign
             mc.Text = Path.GetFileName(mc.SourceFile.LocalPath);
 
 
-            if (this.SavedFileEvent != null)
+            if(this.SavedFileEvent != null)
             {
                 this.SavedFileEvent(this, new RdlDesignerSavedFileEvent(mc.SourceFile));
             }
 
             NoteRecentFiles(mc.SourceFile, true);
 
-            if (mc.Editor != null)
+            if(mc.Editor != null)
                 mc.Editor.ClearUndo();
 
             return;
@@ -1827,18 +1906,18 @@ namespace fyiReporting.RdlDesign
             RdlEditPreview e = mc == null ? null : mc.RdlEditor;
             bool bNotPreview = true;
 
-            foreach (object a in this.editToolStripMenuItem.DropDownItems)
+            foreach(object a in this.editToolStripMenuItem.DropDownItems)
             {
-                if (a.GetType() == typeof(ToolStripMenuItem))
+                if(a.GetType() == typeof(ToolStripMenuItem))
                 {
-                    ((ToolStripMenuItem)a).Enabled = false; 
+                    ((ToolStripMenuItem)a).Enabled = false;
                 }
             }
 
-            if (e == null || e.DesignTab != "edit")
+            if(e == null || e.DesignTab != "edit")
             {
-				undoToolStripMenuItem.Text = e == null ? Strings.RdlDesigner_menuEdit_Popup_Undo : Strings.RdlDesigner_menuEdit_Popup_Undo + " " + e.UndoDescription;
-                if (e != null && e.DesignTab == "preview")
+                undoToolStripMenuItem.Text = e == null ? Strings.RdlDesigner_menuEdit_Popup_Undo : Strings.RdlDesigner_menuEdit_Popup_Undo + " " + e.UndoDescription;
+                if(e != null && e.DesignTab == "preview")
                 {
                     bNotPreview = false;
                     undoToolStripMenuItem.Enabled = true;
@@ -1859,9 +1938,9 @@ namespace fyiReporting.RdlDesign
                     selectAllToolStripMenuItem.Enabled = true;
                 }
 
-                    
 
-                if (mc == null || e == null)
+
+                if(mc == null || e == null)
                 {
                     undoToolStripMenuItem.Enabled = redoToolStripMenuItem.Enabled =
                         cutToolStripMenuItem.Enabled = copyToolStripMenuItem.Enabled =
@@ -1904,22 +1983,22 @@ namespace fyiReporting.RdlDesign
 
         private void menuEditUndo_Click(object sender, System.EventArgs ea)
         {
-            if (this.ctlEditTextbox != null && ctlEditTextbox.Focused)
+            if(this.ctlEditTextbox != null && ctlEditTextbox.Focused)
             {
                 ctlEditTextbox.Undo();
                 return;
             }
 
             RdlEditPreview e = GetEditor();
-            if (e == null)
+            if(e == null)
                 return;
 
-            if (e.CanUndo == true)
+            if(e.CanUndo == true)
             {
                 e.Undo();
 
                 MDIChild mc = this.ActiveMdiChild as MDIChild;
-                if (mc != null && mc.DesignTab == "design")
+                if(mc != null && mc.DesignTab == "design")
                 {
                     e.DesignCtl.SetScrollControls();
                 }
@@ -1930,10 +2009,10 @@ namespace fyiReporting.RdlDesign
         private void menuEditRedo_Click(object sender, System.EventArgs ea)
         {
             RdlEditPreview e = GetEditor();
-            if (e == null)
+            if(e == null)
                 return;
 
-            if (e.CanRedo == true)
+            if(e.CanRedo == true)
             {
                 e.Redo();
             }
@@ -1941,52 +2020,52 @@ namespace fyiReporting.RdlDesign
 
         private void menuEditCut_Click(object sender, System.EventArgs ea)
         {
-            if (this.ctlEditTextbox != null && ctlEditTextbox.Focused)
+            if(this.ctlEditTextbox != null && ctlEditTextbox.Focused)
             {
                 ctlEditTextbox.Cut();
                 return;
             }
 
             RdlEditPreview e = GetEditor();
-            if (e == null)
+            if(e == null)
                 return;
 
-            if (e.SelectionLength > 0)
+            if(e.SelectionLength > 0)
                 e.Cut();
         }
 
         private void menuEditCopy_Click(object sender, System.EventArgs ea)
         {
-            if (this.ctlEditTextbox != null && ctlEditTextbox.Focused)
+            if(this.ctlEditTextbox != null && ctlEditTextbox.Focused)
             {
                 ctlEditTextbox.Copy();
                 return;
             }
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             RdlEditPreview e = mc.RdlEditor;
-            if (e == null)
+            if(e == null)
                 return;
 
-            if (e.SelectionLength > 0)
+            if(e.SelectionLength > 0)
                 e.Copy();
         }
 
         private void menuEditPaste_Click(object sender, System.EventArgs ea)
         {
-            if (this.ctlEditTextbox != null && ctlEditTextbox.Focused)
+            if(this.ctlEditTextbox != null && ctlEditTextbox.Focused)
             {
                 ctlEditTextbox.Paste();
                 return;
             }
 
             RdlEditPreview e = GetEditor();
-            if (e == null)
+            if(e == null)
                 return;
 
-            if (Clipboard.GetDataObject().GetDataPresent(DataFormats.Text) == true ||
+            if(Clipboard.GetDataObject().GetDataPresent(DataFormats.Text) == true ||
                 Clipboard.GetDataObject().GetDataPresent(DataFormats.Bitmap) == true)
                 e.Paste();
         }
@@ -1994,10 +2073,10 @@ namespace fyiReporting.RdlDesign
         private void menuEditDelete_Click(object sender, System.EventArgs ea)
         {
             RdlEditPreview e = GetEditor();
-            if (e == null)
+            if(e == null)
                 return;
 
-            if (e.SelectionLength > 0)
+            if(e.SelectionLength > 0)
                 e.SelectedText = "";
         }
 
@@ -2015,12 +2094,12 @@ namespace fyiReporting.RdlDesign
         {
             _ShowProperties = bShow;
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null || !_ShowProperties || mc.DesignTab != "design")
+            if(mc == null || !_ShowProperties || mc.DesignTab != "design")
                 mainProperties.ResetSelection(null, null);
             else
                 mainProperties.ResetSelection(mc.RdlEditor.DrawCtl, mc.RdlEditor.DesignCtl);
 
-            if (mc != null && !_ShowProperties)
+            if(mc != null && !_ShowProperties)
                 mc.SetFocus();
             mainProperties.Visible = mainSP.Visible = _ShowProperties;
             propertiesWindowsToolStripMenuItem.Checked = _ShowProperties;
@@ -2028,13 +2107,13 @@ namespace fyiReporting.RdlDesign
 
         private void menuEditSelectAll_Click(object sender, System.EventArgs ea)
         {
-            if (this.ctlEditTextbox != null && ctlEditTextbox.Focused)
+            if(this.ctlEditTextbox != null && ctlEditTextbox.Focused)
             {
                 ctlEditTextbox.SelectAll();
                 return;
             }
             RdlEditPreview e = GetEditor();
-            if (e == null)
+            if(e == null)
                 return;
 
             e.SelectAll();
@@ -2046,11 +2125,11 @@ namespace fyiReporting.RdlDesign
             // These menus require an MDIChild in order to work
             RdlEditPreview e = mc == null ? null : mc.RdlEditor;
 
-            if (e == null)
+            if(e == null)
                 return;
-            if (e.DesignTab == "preview")
+            if(e.DesignTab == "preview")
             {
-                if (!e.PreviewCtl.ShowFindPanel)
+                if(!e.PreviewCtl.ShowFindPanel)
                     e.PreviewCtl.ShowFindPanel = true;
                 e.PreviewCtl.FindNext();
             }
@@ -2064,7 +2143,7 @@ namespace fyiReporting.RdlDesign
         private void menuEditFindNext_Click(object sender, System.EventArgs ea)
         {
             RdlEditPreview e = GetEditor();
-            if (e == null)
+            if(e == null)
                 return;
 
             FindTab tab = new FindTab(e);
@@ -2074,17 +2153,17 @@ namespace fyiReporting.RdlDesign
         private void menuEdit_FormatXml(object sender, System.EventArgs ea)
         {
             RdlEditPreview e = GetEditor();
-            if (e == null)
+            if(e == null)
                 return;
 
-            if (e.Text.Length > 0)
+            if(e.Text.Length > 0)
             {
                 try
                 {
                     e.Text = DesignerUtility.FormatXml(e.Text);
                     e.Modified = true;
                 }
-                catch (Exception ex)
+                catch(Exception ex)
                 {
                     MessageBox.Show(ex.Message, Strings.RdlDesigner_Showl_FormatXML);
                 }
@@ -2094,7 +2173,7 @@ namespace fyiReporting.RdlDesign
         private void menuEditReplace_Click(object sender, System.EventArgs ea)
         {
             RdlEditPreview e = GetEditor();
-            if (e == null)
+            if(e == null)
                 return;
             FindTab tab = new FindTab(e);
             tab.tcFRG.SelectedTab = tab.tabReplace;
@@ -2104,7 +2183,7 @@ namespace fyiReporting.RdlDesign
         private void menuEditGoto_Click(object sender, System.EventArgs ea)
         {
             RdlEditPreview e = GetEditor();
-            if (e == null)
+            if(e == null)
                 return;
 
             FindTab tab = new FindTab(e);
@@ -2114,7 +2193,7 @@ namespace fyiReporting.RdlDesign
 
         private void menuHelpAbout_Click(object sender, System.EventArgs ea)
         {
-            using (DialogAbout dlg = new DialogAbout())
+            using(DialogAbout dlg = new DialogAbout())
             {
                 dlg.ShowDialog();
             }
@@ -2126,7 +2205,7 @@ namespace fyiReporting.RdlDesign
             {
                 System.Diagnostics.Process.Start(HelpUrl);
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 MessageBox.Show(ex.Message + "\n\n" + Strings.RdlDesigner_Show_ResettingHelpURL, Strings.RdlDesigner_Show_HelpURLInvalid);
                 _HelpUrl = DefaultHelpUrl;
@@ -2139,7 +2218,7 @@ namespace fyiReporting.RdlDesign
             {
                 System.Diagnostics.Process.Start(SupportUrl);
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 MessageBox.Show(ex.Message + "\n\n" + Strings.RdlDesigner_Show_ResettingSupportURL, Strings.RdlDesigner_Show_SupportURLInvalid);
                 _SupportUrl = DefaultSupportUrl;
@@ -2149,14 +2228,14 @@ namespace fyiReporting.RdlDesign
         internal RdlEditPreview GetEditor()
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return null;
             return mc.Editor;
         }
 
         private void menuTools_Popup(object sender, EventArgs e)
         {
-            if (_ServerProcess != null && _ServerProcess.HasExited)
+            if(_ServerProcess != null && _ServerProcess.HasExited)
                 _ServerProcess = null;
             startDesktopServerToolStripMenuItem.Text = this._ServerProcess == null ? Strings.RdlDesigner_menuTools_Popup_StartDesktop : Strings.RdlDesigner_menuTools_Popup_StopDesktop;
 
@@ -2166,7 +2245,7 @@ namespace fyiReporting.RdlDesign
 
         private void menuToolsProcess_Click(object sender, EventArgs e)
         {
-            if (_ServerProcess == null)
+            if(_ServerProcess == null)
                 menuToolsStartProcess(true);
             else
                 menuToolsCloseProcess(true);
@@ -2174,7 +2253,7 @@ namespace fyiReporting.RdlDesign
 
         internal void menuToolsStartProcess(bool bMsg)
         {
-            if (_ServerProcess != null && !_ServerProcess.HasExited)
+            if(_ServerProcess != null && !_ServerProcess.HasExited)
                 return;
 
             string pswd = GetPassword();
@@ -2185,7 +2264,7 @@ namespace fyiReporting.RdlDesign
                     AppDomain.CurrentDomain.BaseDirectory, "RdlDesktop.exe");
 
                 ProcessStartInfo psi = new ProcessStartInfo(filename);
-                if (pswd != null)
+                if(pswd != null)
                     psi.Arguments = "/p" + pswd;
                 psi.RedirectStandardError = psi.RedirectStandardInput = psi.RedirectStandardOutput = true;
                 psi.UseShellExecute = false;
@@ -2193,9 +2272,9 @@ namespace fyiReporting.RdlDesign
                 psi.CreateNoWindow = true;
                 _ServerProcess = Process.Start(psi);
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
-                if (bMsg)
+                if(bMsg)
                     MessageBox.Show(ex.Message, Strings.RdlDesigner_Show_UnableStartDesktop);
             }
 
@@ -2204,17 +2283,17 @@ namespace fyiReporting.RdlDesign
 
         internal void menuToolsCloseProcess(bool bMsg)
         {
-            if (_ServerProcess == null)
+            if(_ServerProcess == null)
                 return;
-            if (!_ServerProcess.HasExited)
+            if(!_ServerProcess.HasExited)
             {
                 try
                 {
                     _ServerProcess.StandardInput.WriteLine("x");	// x stops the server
                 }
-                catch (Exception ex)
+                catch(Exception ex)
                 {
-                    if (bMsg)
+                    if(bMsg)
                         MessageBox.Show(ex.Message, Strings.RdlDesigner_Show_ErrorStopProcess);
                 }
             }
@@ -2223,7 +2302,7 @@ namespace fyiReporting.RdlDesign
 
         private void menuToolsOptions_Click(object sender, EventArgs e)
         {
-            using (DialogToolOptions dlg = new DialogToolOptions(this))
+            using(DialogToolOptions dlg = new DialogToolOptions(this))
             {
                 DialogResult rc = dlg.ShowDialog();
             }
@@ -2231,7 +2310,7 @@ namespace fyiReporting.RdlDesign
 
         private void menuToolsValidateSchema_Click(object sender, EventArgs e)
         {
-            if (_ValidateRdl == null)
+            if(_ValidateRdl == null)
             {
                 _ValidateRdl = new DialogValidateRdl(this);
                 _ValidateRdl.Show();
@@ -2263,7 +2342,7 @@ namespace fyiReporting.RdlDesign
 
         private void menuWndCloseAll_Click(object sender, EventArgs e)
         {
-            foreach (Form f in this.MdiChildren)
+            foreach(Form f in this.MdiChildren)
             {
                 f.Close();
             }
@@ -2272,9 +2351,9 @@ namespace fyiReporting.RdlDesign
         private void menuWndCloseAllButCurrent_Click(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            foreach (Form f in this.MdiChildren)
+            foreach(Form f in this.MdiChildren)
             {
-                if (mc == f as MDIChild)
+                if(mc == f as MDIChild)
                     continue;
                 f.Close();
             }
@@ -2310,22 +2389,22 @@ namespace fyiReporting.RdlDesign
 
         private void NoteRecentFiles(Uri name, bool bResetMenu)
         {
-            if (name == null)
+            if(name == null)
             {
                 return;
             }
 
-            if (_RecentFiles.ContainsValue(name.LocalPath))
+            if(_RecentFiles.ContainsValue(name.LocalPath))
             {	// need to move it to top of list; so remove old one
                 int loc = _RecentFiles.IndexOfValue(name.LocalPath);
                 _RecentFiles.RemoveAt(loc);
             }
-            if (_RecentFiles.Count >= _RecentFilesMax)
+            if(_RecentFiles.Count >= _RecentFilesMax)
             {
                 _RecentFiles.RemoveAt(0);	// remove the first entry
             }
             _RecentFiles.Add(DateTime.Now, name.LocalPath);
-            if (bResetMenu)
+            if(bResetMenu)
             {
                 RecentFilesMenu();
             }
@@ -2334,10 +2413,10 @@ namespace fyiReporting.RdlDesign
 
         internal void RecentFilesMenu()
         {
-            
+
             recentFilesToolStripMenuItem.DropDownItems.Clear();
             int mi = 1;
-            for (int i = _RecentFiles.Count - 1; i >= 0; i--)
+            for(int i = _RecentFiles.Count - 1; i >= 0; i--)
             {
                 string menuText = string.Format("&{0} {1}", mi++, _RecentFiles.Values[i]);
                 ToolStripMenuItem m = new ToolStripMenuItem(menuText);
@@ -2354,14 +2433,14 @@ namespace fyiReporting.RdlDesign
 
         internal string GetPassword()
         {
-            if (bGotPassword)
+            if(bGotPassword)
                 return _DataSourceReferencePassword;
 
-            using (DataSourcePassword dlg = new DataSourcePassword())
+            using(DataSourcePassword dlg = new DataSourcePassword())
             {
                 DialogResult rc = dlg.ShowDialog();
                 bGotPassword = true;
-                if (rc == DialogResult.OK)
+                if(rc == DialogResult.OK)
                     _DataSourceReferencePassword = dlg.PassPhrase;
 
                 return _DataSourceReferencePassword;
@@ -2385,30 +2464,30 @@ namespace fyiReporting.RdlDesign
                 xNode = xDoc.SelectSingleNode("//designerstate");
 
                 string[] args = Environment.GetCommandLineArgs();
-                for (int i = 1; i < args.Length; i++)
+                for(int i = 1; i < args.Length; i++)
                 {
                     string larg = args[i].ToLower();
-                    if (larg == "/m" || larg == "-m")
+                    if(larg == "/m" || larg == "-m")
                         continue;
 
-                    if (File.Exists(args[i]))			// only add it if it exists
+                    if(File.Exists(args[i]))			// only add it if it exists
                     {
                         _CurrentFiles.Add(new Uri(args[i]));
                     }
                 }
 
                 // Loop thru all the child nodes
-                foreach (XmlNode xNodeLoop in xNode.ChildNodes)
+                foreach(XmlNode xNodeLoop in xNode.ChildNodes)
                 {
-                    switch (xNodeLoop.Name)
+                    switch(xNodeLoop.Name)
                     {
                         case "RecentFiles":
                             DateTime now = DateTime.Now;
                             now = now.Subtract(new TimeSpan(0, 1, 0, 0, 0));	// subtract an hour
-                            foreach (XmlNode xN in xNodeLoop.ChildNodes)
+                            foreach(XmlNode xN in xNodeLoop.ChildNodes)
                             {
                                 Uri file = new Uri(xN.InnerText.Trim());
-                                if (File.Exists(file.LocalPath)) // only add it if it exists 	
+                                if(File.Exists(file.LocalPath)) // only add it if it exists 	
                                 {
                                     _RecentFiles.Add(now, file.LocalPath);
                                     now = now.AddSeconds(1);
@@ -2426,12 +2505,12 @@ namespace fyiReporting.RdlDesign
                             }
                             break;
                         case "CurrentFiles":
-                            if (_CurrentFiles.Count > 0)	// don't open other current files if opened with argument
+                            if(_CurrentFiles.Count > 0)	// don't open other current files if opened with argument
                                 break;
-                            foreach (XmlNode xN in xNodeLoop.ChildNodes)
+                            foreach(XmlNode xN in xNodeLoop.ChildNodes)
                             {
                                 Uri file = new Uri(xN.InnerText.Trim());
-                                if (File.Exists(file.LocalPath)) // only add it if it exists 
+                                if(File.Exists(file.LocalPath)) // only add it if it exists 
                                 {
                                     _CurrentFiles.Add(file);
                                 }
@@ -2439,18 +2518,18 @@ namespace fyiReporting.RdlDesign
                             break;
                         case "Toolbar":
                             _Toolbar = new List<string>();
-                            foreach (XmlNode xN in xNodeLoop.ChildNodes)
+                            foreach(XmlNode xN in xNodeLoop.ChildNodes)
                             {
                                 string item = xN.InnerText.Trim();
                                 _Toolbar.Add(item);
                             }
                             break;
                         case "Help":
-                            if (xNodeLoop.InnerText.Length > 0)		//empty means to use the default
+                            if(xNodeLoop.InnerText.Length > 0)		//empty means to use the default
                                 _HelpUrl = xNodeLoop.InnerText;
                             break;
                         case "Support":
-                            if (xNodeLoop.InnerText.Length > 0)		//empty means to use the default
+                            if(xNodeLoop.InnerText.Length > 0)		//empty means to use the default
                                 _SupportUrl = xNodeLoop.InnerText;
                             break;
                         case "EditLines":
@@ -2481,12 +2560,12 @@ namespace fyiReporting.RdlDesign
                     }
                 }
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {		// Didn't sucessfully get the startup state but don't really care
                 Console.WriteLine(string.Format("Exception in GetStartupState ignored.\n{0}\n{1}", ex.Message, ex.StackTrace));
             }
 
-            if (_Toolbar == null)		// Use this as the default toolbar
+            if(_Toolbar == null)		// Use this as the default toolbar
                 _Toolbar = this.ToolbarDefault;
             return;
         }
@@ -2509,10 +2588,10 @@ namespace fyiReporting.RdlDesign
                 // Loop thru the current files
                 XmlNode xFiles = xDoc.CreateElement("CurrentFiles");
                 xDS.AppendChild(xFiles);
-                foreach (MDIChild mc in this.MdiChildren)
+                foreach(MDIChild mc in this.MdiChildren)
                 {
                     Uri file = mc.SourceFile;
-                    if (file == null)
+                    if(file == null)
                     {
                         continue;
                     }
@@ -2529,7 +2608,7 @@ namespace fyiReporting.RdlDesign
                 // Loop thru recent files list
                 xFiles = xDoc.CreateElement("RecentFiles");
                 xDS.AppendChild(xFiles);
-                foreach (string f in _RecentFiles.Values)
+                foreach(string f in _RecentFiles.Values)
                 {
                     xN = xDoc.CreateElement("file");
                     xN.InnerText = f;
@@ -2545,10 +2624,10 @@ namespace fyiReporting.RdlDesign
                 XmlNode hmap = xDoc.CreateElement("MapSubtypes");
                 xDS.AppendChild(hmap);
                 StringBuilder maps = new StringBuilder();
-                for (int mi = 0; mi < MapSubtypes.Length; mi++)
+                for(int mi = 0; mi < MapSubtypes.Length; mi++)
                 {
                     maps.Append(MapSubtypes[mi]);
-                    if (mi + 1 < MapSubtypes.Length)
+                    if(mi + 1 < MapSubtypes.Length)
                         maps.Append(',');
                 }
                 hmap.InnerText = maps.ToString();
@@ -2580,7 +2659,7 @@ namespace fyiReporting.RdlDesign
 
                 // PropertiesLocation
                 string loc = "right";
-                switch (_PropertiesLocation)
+                switch(_PropertiesLocation)
                 {
                     case DockStyle.Left:
                         loc = "left";
@@ -2599,7 +2678,7 @@ namespace fyiReporting.RdlDesign
                 // Save the toolbar items
                 XmlNode xTB = xDoc.CreateElement("Toolbar");
                 xDS.AppendChild(xTB);
-                foreach (string t in _Toolbar)
+                foreach(string t in _Toolbar)
                 {
                     xN = xDoc.CreateElement("item");
                     xN.InnerText = t;
@@ -2608,7 +2687,7 @@ namespace fyiReporting.RdlDesign
 
                 // Save the custom colors
                 StringBuilder sb = new StringBuilder();
-                foreach (int c in colors)
+                foreach(int c in colors)
                 {
                     sb.Append(c.ToString());
                     sb.Append(",");
@@ -2645,9 +2724,9 @@ namespace fyiReporting.RdlDesign
 
                 string tcolors = "";
                 // Loop thru all the child nodes
-                foreach (XmlNode xNodeLoop in xNode.ChildNodes)
+                foreach(XmlNode xNodeLoop in xNode.ChildNodes)
                 {
-                    if (xNodeLoop.Name != "CustomColors")
+                    if(xNodeLoop.Name != "CustomColors")
                         continue;
                     tcolors = xNodeLoop.InnerText;
                     break;
@@ -2655,12 +2734,12 @@ namespace fyiReporting.RdlDesign
                 string[] colorList = tcolors.Split(',');
                 int i = 0;
 
-                foreach (string c in colorList)
+                foreach(string c in colorList)
                 {
                     try { cArray[i] = int.Parse(c); }
                     catch { cArray[i] = white; }
                     i++;
-                    if (i >= cArray.Length)		// Only allow 16 custom colors
+                    if(i >= cArray.Length)		// Only allow 16 custom colors
                         break;
                 }
             }
@@ -2675,7 +2754,7 @@ namespace fyiReporting.RdlDesign
             string optFileName = AppDomain.CurrentDomain.BaseDirectory + "designerstate.xml";
 
             StringBuilder sb = new StringBuilder();
-            foreach (int c in colors)
+            foreach(int c in colors)
             {
                 sb.Append(c.ToString());
                 sb.Append(",");
@@ -2692,16 +2771,16 @@ namespace fyiReporting.RdlDesign
 
                 // Loop thru all the child nodes
                 XmlNode cNode = null;
-                foreach (XmlNode xNodeLoop in xNode.ChildNodes)
+                foreach(XmlNode xNodeLoop in xNode.ChildNodes)
                 {
-                    if (xNodeLoop.Name == "CustomColors")
+                    if(xNodeLoop.Name == "CustomColors")
                     {
                         cNode = xNodeLoop;
                         break;
                     }
                 }
 
-                if (cNode == null)
+                if(cNode == null)
                 {
                     cNode = xDoc.CreateElement("CustomColors");
                     xNode.AppendChild(cNode);
@@ -2711,7 +2790,7 @@ namespace fyiReporting.RdlDesign
 
                 xDoc.Save(optFileName);
             }
-            catch (Exception e)
+            catch(Exception e)
             {
                 MessageBox.Show(e.Message, Strings.RdlDesigner_Show_CustomColorSaveFailed);
             }
@@ -2721,7 +2800,7 @@ namespace fyiReporting.RdlDesign
         private void EditTextbox_Validated(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null ||
+            if(mc == null ||
                 mc.DesignTab != "design" || mc.DrawCtl.SelectedCount != 1 ||
                 mc.Editor == null)
                 return;
@@ -2732,7 +2811,7 @@ namespace fyiReporting.RdlDesign
 
         private void InsertToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (ctlMenuInsertCurrent != null)
+            if(ctlMenuInsertCurrent != null)
                 ctlMenuInsertCurrent.Checked = false;
 
             ToolStripMenuItem ctl = (ToolStripMenuItem)sender;
@@ -2740,7 +2819,7 @@ namespace fyiReporting.RdlDesign
             ctlMenuInsertCurrent = ctl.Checked ? ctl : null;
 
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
             mc.SetFocus();
 
@@ -2749,14 +2828,14 @@ namespace fyiReporting.RdlDesign
 
         private void Insert_Click(object sender, EventArgs e)
         {
-            if (ctlInsertCurrent != null)
+            if(ctlInsertCurrent != null)
                 ctlInsertCurrent.Checked = false;
 
             ToolStripButton ctl = (ToolStripButton)sender;
             ctlInsertCurrent = ctl.Checked ? ctl : null;
 
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
             mc.SetFocus();
 
@@ -2766,7 +2845,7 @@ namespace fyiReporting.RdlDesign
         private void boldToolStripButton1_Click(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.ApplyStyleToSelected("FontWeight", boldToolStripButton1.Checked ? "Bold" : "Normal");
@@ -2778,7 +2857,7 @@ namespace fyiReporting.RdlDesign
         private void italiacToolStripButton1_Click(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.ApplyStyleToSelected("FontStyle", italiacToolStripButton1.Checked ? "Italic" : "Normal");
@@ -2790,7 +2869,7 @@ namespace fyiReporting.RdlDesign
         private void underlineToolStripButton2_Click(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.ApplyStyleToSelected("TextDecoration", underlineToolStripButton2.Checked ? "Underline" : "None");
@@ -2802,10 +2881,10 @@ namespace fyiReporting.RdlDesign
         private void foreColorPicker1_Change(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
-            if (!bSuppressChange)
+            if(!bSuppressChange)
             {
                 mc.ApplyStyleToSelected("Color", foreColorPicker1.Text);
                 SetProperties(mc);
@@ -2816,9 +2895,9 @@ namespace fyiReporting.RdlDesign
         private void backColorPicker1_Change(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
-            if (!bSuppressChange)
+            if(!bSuppressChange)
             {
                 mc.ApplyStyleToSelected("BackgroundColor", backColorPicker1.Text);
                 SetProperties(mc);
@@ -2830,10 +2909,10 @@ namespace fyiReporting.RdlDesign
         private void fontToolStripComboBox1_Change(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
-            if (!bSuppressChange)
+            if(!bSuppressChange)
             {
                 mc.ApplyStyleToSelected("FontFamily", fontToolStripComboBox1.Text);
                 SetProperties(mc);
@@ -2844,10 +2923,10 @@ namespace fyiReporting.RdlDesign
         private void fontSizeToolStripComboBox1_Change(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
-            if (!bSuppressChange)
+            if(!bSuppressChange)
             {
                 mc.ApplyStyleToSelected("FontSize", fontSizeToolStripComboBox1.Text + "pt");
                 SetProperties(mc);
@@ -2858,7 +2937,7 @@ namespace fyiReporting.RdlDesign
         private void selectToolStripButton2_Click(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.SelectionTool = selectToolStripButton2.Checked;
@@ -2869,11 +2948,11 @@ namespace fyiReporting.RdlDesign
         private void zoomToolStripComboBox1_Change(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
             mc.SetFocus();
 
-            switch (zoomToolStripComboBox1.Text)
+            switch(zoomToolStripComboBox1.Text)
             {
                 case "Actual Size":
                     mc.Zoom = 1;
@@ -2892,7 +2971,7 @@ namespace fyiReporting.RdlDesign
                         z = Convert.ToSingle(s) / 100f;
                         mc.Zoom = z;
                     }
-                    catch (Exception ex)
+                    catch(Exception ex)
                     {
                         MessageBox.Show(ex.Message, Strings.RdlDesigner_Show_ZoomValueInvalid);
                     }
@@ -2902,16 +2981,16 @@ namespace fyiReporting.RdlDesign
 
         private void RdlDesigner_MdiChildActivate(object sender, EventArgs e)
         {
-            if (this._ValidateRdl != null)		// don't keep the validation open when window changes
+            if(this._ValidateRdl != null)		// don't keep the validation open when window changes
                 this._ValidateRdl.Close();
 
             DesignTabChanged(sender, e);
             SelectionChanged(sender, e);
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
             mc.SetFocus();
-            if (mc.Tab != null)
+            if(mc.Tab != null)
                 mainTC.SelectTab(mc.Tab);
         }
 
@@ -2926,7 +3005,7 @@ namespace fyiReporting.RdlDesign
 
         private void SetProperties(MDIChild mc)
         {
-            if (mc == null || !_ShowProperties || mc.DesignTab != "design")
+            if(mc == null || !_ShowProperties || mc.DesignTab != "design")
                 mainProperties.ResetSelection(null, null);
             else
                 mainProperties.ResetSelection(mc.RdlEditor.DrawCtl, mc.RdlEditor.DesignCtl);
@@ -2938,13 +3017,13 @@ namespace fyiReporting.RdlDesign
 
             SetProperties(mc);
 
-            if (mc == null)
+            if(mc == null)
             {
                 statusPosition.Text = statusSelected.Text = "";
             }
-            else if (mc.DesignTab == "design")
+            else if(mc.DesignTab == "design")
                 SetStatusNameAndPositionDesign(mc);
-            else if (mc.DesignTab == "edit")
+            else if(mc.DesignTab == "edit")
                 SetStatusNameAndPositionEdit(mc);
             else
             {
@@ -2955,7 +3034,7 @@ namespace fyiReporting.RdlDesign
 
         private void SetStatusNameAndPositionDesign(MDIChild mc)
         {
-            if (mc.DrawCtl.SelectedCount <= 0)
+            if(mc.DrawCtl.SelectedCount <= 0)
             {
                 statusPosition.Text = statusSelected.Text = "";
                 return;
@@ -2966,50 +3045,50 @@ namespace fyiReporting.RdlDesign
             var sz = mc.SelectionSize;
             string spos;
 
-	        if (pos.X == float.MinValue) // no item selected is probable cause
-	        {
-		        spos = "";
-	        }
-	        else
-	        {
-		        var rinfo = new RegionInfo(CultureInfo.CurrentCulture.LCID);
-		        double m72 = DesignXmlDraw.POINTSIZED;
+            if(pos.X == float.MinValue) // no item selected is probable cause
+            {
+                spos = "";
+            }
+            else
+            {
+                var rinfo = new RegionInfo(CultureInfo.CurrentCulture.LCID);
+                double m72 = DesignXmlDraw.POINTSIZED;
 
-		        var x = pos.X/m72;
-		        var y = pos.Y/m72;
-		        var unit = rinfo.IsMetric ? Strings.RdlDesigner_Status_cm : Strings.RdlDesigner_Status_in;
+                var x = pos.X / m72;
+                var y = pos.Y / m72;
+                var unit = rinfo.IsMetric ? Strings.RdlDesigner_Status_cm : Strings.RdlDesigner_Status_in;
 
-				if (rinfo.IsMetric)
-				{
-					x *= 2.54d;
-					y *= 2.54d;
-				}
+                if(rinfo.IsMetric)
+                {
+                    x *= 2.54d;
+                    y *= 2.54d;
+                }
 
-		        if (sz.Width == float.MinValue) // item is in a table/matrix is probably cause
-		        {
-			        spos = string.Format("   x={0:0.00}{2}, y={1:0.00}{2}        ",
-			                             x, y, unit);
-		        }
-		        else
-		        {
-			        var w = sz.Width/m72;
-			        var h = sz.Height/m72;
+                if(sz.Width == float.MinValue) // item is in a table/matrix is probably cause
+                {
+                    spos = string.Format("   x={0:0.00}{2}, y={1:0.00}{2}        ",
+                                         x, y, unit);
+                }
+                else
+                {
+                    var w = sz.Width / m72;
+                    var h = sz.Height / m72;
 
-			        if (rinfo.IsMetric)
-			        {
-				        w *= 2.54d;
-				        h *= 2.54d;
-			        }
+                    if(rinfo.IsMetric)
+                    {
+                        w *= 2.54d;
+                        h *= 2.54d;
+                    }
 
-			        spos = string.Format("   x={0:0.00}{4}, y={1:0.00}{4}, w={2:0.00}{4}, h={3:0.00}{4}        ",
-			                             x, y, w, h, unit);
-		        }
-	        }
+                    spos = string.Format("   x={0:0.00}{4}, y={1:0.00}{4}, w={2:0.00}{4}, h={3:0.00}{4}        ",
+                                         x, y, w, h, unit);
+                }
+            }
 
             statusPosition.Text = spos;
 
             // Handle text
-			statusSelected.Text = mc.SelectionName;
+            statusSelected.Text = mc.SelectionName;
         }
 
         private void SetStatusNameAndPositionEdit(MDIChild mc)
@@ -3022,21 +3101,21 @@ namespace fyiReporting.RdlDesign
         private void EditTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             // Force scroll up and down
-            switch (e.KeyCode)
+            switch(e.KeyCode)
             {
                 case Keys.Enter:
                     mc.SetFocus();
                     e.Handled = true;
                     break;
                 case Keys.Escape:
-                    if (mc.DrawCtl.SelectedCount == 1)
+                    if(mc.DrawCtl.SelectedCount == 1)
                     {
                         XmlNode tn = mc.DrawCtl.SelectedList[0] as XmlNode;
-                        if (tn != null && tn.Name == "Textbox")
+                        if(tn != null && tn.Name == "Textbox")
                         {
                             ctlEditTextbox.Text = mc.DrawCtl.GetElementValue(tn, "Value", "");
                             e.Handled = true;
@@ -3088,24 +3167,24 @@ namespace fyiReporting.RdlDesign
         private void bottomsToolStripMenuItemutton_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             TextAlignEnum ta = TextAlignEnum.General;
 
-            if (sender == leftAlignToolStripButton2)
+            if(sender == leftAlignToolStripButton2)
             {
                 ta = TextAlignEnum.Left;
                 leftAlignToolStripButton2.Checked = true;
                 rightAlignToolStripButton3.Checked = centerAlignToolStripButton2.Checked = false;
             }
-            else if (sender == rightAlignToolStripButton3)
+            else if(sender == rightAlignToolStripButton3)
             {
                 ta = TextAlignEnum.Right;
                 rightAlignToolStripButton3.Checked = true;
                 leftAlignToolStripButton2.Checked = centerAlignToolStripButton2.Checked = false;
             }
-            else if (sender == centerAlignToolStripButton2)
+            else if(sender == centerAlignToolStripButton2)
             {
                 ta = TextAlignEnum.Center;
                 centerAlignToolStripButton2.Checked = true;
@@ -3122,7 +3201,7 @@ namespace fyiReporting.RdlDesign
         private void centersToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.AlignCenters();
@@ -3132,7 +3211,7 @@ namespace fyiReporting.RdlDesign
         private void leftsToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.AlignLefts();
@@ -3142,7 +3221,7 @@ namespace fyiReporting.RdlDesign
         private void rightsToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.AlignRights();
@@ -3152,7 +3231,7 @@ namespace fyiReporting.RdlDesign
         private void bottomsToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.AlignBottoms();
@@ -3162,7 +3241,7 @@ namespace fyiReporting.RdlDesign
         private void topsToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.AlignTops();
@@ -3172,7 +3251,7 @@ namespace fyiReporting.RdlDesign
         private void middlesToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.AlignMiddles();
@@ -3182,7 +3261,7 @@ namespace fyiReporting.RdlDesign
         private void heightToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.SizeHeights();
@@ -3192,7 +3271,7 @@ namespace fyiReporting.RdlDesign
         private void widthToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.SizeWidths();
@@ -3202,7 +3281,7 @@ namespace fyiReporting.RdlDesign
         private void bothToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.SizeBoth();
@@ -3212,7 +3291,7 @@ namespace fyiReporting.RdlDesign
         private void makeEqualToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.HorzSpacingMakeEqual();
@@ -3222,7 +3301,7 @@ namespace fyiReporting.RdlDesign
         private void increaseToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.HorzSpacingIncrease();
@@ -3232,7 +3311,7 @@ namespace fyiReporting.RdlDesign
         private void decreaseToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.HorzSpacingDecrease();
@@ -3242,7 +3321,7 @@ namespace fyiReporting.RdlDesign
         private void zeroToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.HorzSpacingMakeZero();
@@ -3252,7 +3331,7 @@ namespace fyiReporting.RdlDesign
         private void makeEqualToolStripMenuItem1_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.VertSpacingMakeEqual();
@@ -3262,7 +3341,7 @@ namespace fyiReporting.RdlDesign
         private void increaseToolStripMenuItem1_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.VertSpacingIncrease();
@@ -3272,7 +3351,7 @@ namespace fyiReporting.RdlDesign
         private void decreaseToolStripMenuItem1_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.VertSpacingDecrease();
@@ -3282,7 +3361,7 @@ namespace fyiReporting.RdlDesign
         private void zeroToolStripMenuItem1_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.VertSpacingMakeZero();
@@ -3303,7 +3382,7 @@ namespace fyiReporting.RdlDesign
         private void menuViewDesigner_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
             mc.RdlEditor.DesignTab = "design";
         }
@@ -3311,7 +3390,7 @@ namespace fyiReporting.RdlDesign
         private void menuViewRDL_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
             mc.RdlEditor.DesignTab = "edit";
         }
@@ -3319,7 +3398,7 @@ namespace fyiReporting.RdlDesign
         private void menuViewBrowser_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             try
@@ -3330,7 +3409,7 @@ namespace fyiReporting.RdlDesign
 
                 string rdlfile = Path.GetFileNameWithoutExtension(mc.SourceFile.LocalPath) + "_" + (++TEMPRDL_INC).ToString() + TEMPRDL;
                 Uri file;
-                if (Path.IsPathRooted(dc.Directory))
+                if(Path.IsPathRooted(dc.Directory))
                 {
                     file = new Uri(dc.Directory + Path.DirectorySeparatorChar + rdlfile);
                 }
@@ -3340,14 +3419,14 @@ namespace fyiReporting.RdlDesign
                         dc.Directory + Path.DirectorySeparatorChar + rdlfile);
                 }
 
-                if (_TempReportFiles == null)
+                if(_TempReportFiles == null)
                 {
                     _TempReportFiles = new List<Uri>();
                     _TempReportFiles.Add(file);
                 }
                 else
                 {
-                    if (!_TempReportFiles.Contains(file))
+                    if(!_TempReportFiles.Contains(file))
                     {
                         _TempReportFiles.Add(file);
                     }
@@ -3360,7 +3439,7 @@ namespace fyiReporting.RdlDesign
                 System.Diagnostics.Process.Start(url.AbsoluteUri);
 
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 MessageBox.Show(ex.Message, Strings.RdlDesigner_Show_UnableShowReport);
             }
@@ -3370,7 +3449,7 @@ namespace fyiReporting.RdlDesign
         private void menuViewPreview_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
             mc.RdlEditor.DesignTab = "preview";
         }
@@ -3378,75 +3457,75 @@ namespace fyiReporting.RdlDesign
         private void menuFormatPadding_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             ToolStripMenuItem mi = sender as ToolStripMenuItem;
 
             string padname = null;
             int paddiff = 0;
-            if (mi == increaseToolStripMenuItem2)
+            if(mi == increaseToolStripMenuItem2)
             {
                 padname = "PaddingLeft";
                 paddiff = 4;
             }
-            else if (mi == decreaseToolStripMenuItem2)
+            else if(mi == decreaseToolStripMenuItem2)
             {
                 padname = "PaddingLeft";
                 paddiff = -4;
             }
-            else if (mi == zeroToolStripMenuItem2)
+            else if(mi == zeroToolStripMenuItem2)
             {
                 padname = "PaddingLeft";
                 paddiff = 0;
             }
-            else if (mi == increaseToolStripMenuItem3)
+            else if(mi == increaseToolStripMenuItem3)
             {
                 padname = "PaddingRight";
                 paddiff = 4;
             }
-            else if (mi == decreaseToolStripMenuItem3)
+            else if(mi == decreaseToolStripMenuItem3)
             {
                 padname = "PaddingRight";
                 paddiff = -4;
             }
-            else if (mi == zeroToolStripMenuItem3)
+            else if(mi == zeroToolStripMenuItem3)
             {
                 padname = "PaddingRight";
                 paddiff = 0;
             }
-            else if (mi == increaseToolStripMenuItem4)
+            else if(mi == increaseToolStripMenuItem4)
             {
                 padname = "PaddingTop";
                 paddiff = 4;
             }
-            else if (mi == decreaseToolStripMenuItem4)
+            else if(mi == decreaseToolStripMenuItem4)
             {
                 padname = "PaddingTop";
                 paddiff = -4;
             }
-            else if (mi == zeroToolStripMenuItem4)
+            else if(mi == zeroToolStripMenuItem4)
             {
                 padname = "PaddingTop";
                 paddiff = 0;
             }
-            else if (mi == increaseToolStripMenuItem5)
+            else if(mi == increaseToolStripMenuItem5)
             {
                 padname = "PaddingBottom";
                 paddiff = 4;
             }
-            else if (mi == decreaseToolStripMenuItem5)
+            else if(mi == decreaseToolStripMenuItem5)
             {
                 padname = "PaddingBottom";
                 paddiff = -4;
             }
-            else if (mi == zeroToolStripMenuItem5)
+            else if(mi == zeroToolStripMenuItem5)
             {
                 padname = "PaddingBottom";
                 paddiff = 0;
             }
 
-            if (padname != null)
+            if(padname != null)
             {
                 mc.Editor.DesignCtl.SetPadding(padname, paddiff);
                 SetProperties(mc);
@@ -3456,11 +3535,11 @@ namespace fyiReporting.RdlDesign
 
         private void CleanupTempFiles()
         {
-            if (_TempReportFiles == null)
+            if(_TempReportFiles == null)
             {
                 return;
             }
-            foreach (Uri file in _TempReportFiles)
+            foreach(Uri file in _TempReportFiles)
             {
                 try
                 {	// It's ok for the delete to fail
@@ -3481,24 +3560,24 @@ namespace fyiReporting.RdlDesign
         private void menuFormatAlignButton_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             TextAlignEnum ta = TextAlignEnum.General;
 
-            if (sender == leftAlignToolStripButton2)
+            if(sender == leftAlignToolStripButton2)
             {
                 ta = TextAlignEnum.Left;
                 leftAlignToolStripButton2.Checked = true;
                 rightAlignToolStripButton3.Checked = centerAlignToolStripButton2.Checked = false;
             }
-            else if (sender == rightAlignToolStripButton3)
+            else if(sender == rightAlignToolStripButton3)
             {
                 ta = TextAlignEnum.Right;
                 rightAlignToolStripButton3.Checked = true;
                 leftAlignToolStripButton2.Checked = centerAlignToolStripButton2.Checked = false;
             }
-            else if (sender == centerAlignToolStripButton2)
+            else if(sender == centerAlignToolStripButton2)
             {
                 ta = TextAlignEnum.Center;
                 centerAlignToolStripButton2.Checked = true;
@@ -3515,7 +3594,7 @@ namespace fyiReporting.RdlDesign
         private void menuFormatAlignC_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.AlignCenters();
@@ -3525,7 +3604,7 @@ namespace fyiReporting.RdlDesign
         private void menuFormatAlignL_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.AlignLefts();
@@ -3535,7 +3614,7 @@ namespace fyiReporting.RdlDesign
         private void menuFormatAlignR_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.AlignRights();
@@ -3545,7 +3624,7 @@ namespace fyiReporting.RdlDesign
         private void menuFormatAlignB_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.AlignBottoms();
@@ -3555,7 +3634,7 @@ namespace fyiReporting.RdlDesign
         private void menuFormatAlignT_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.AlignTops();
@@ -3565,7 +3644,7 @@ namespace fyiReporting.RdlDesign
         private void menuFormatAlignM_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.AlignMiddles();
@@ -3575,7 +3654,7 @@ namespace fyiReporting.RdlDesign
         private void menuFormatSizeH_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.SizeHeights();
@@ -3585,7 +3664,7 @@ namespace fyiReporting.RdlDesign
         private void menuFormatSizeW_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.SizeWidths();
@@ -3595,7 +3674,7 @@ namespace fyiReporting.RdlDesign
         private void menuFormatSizeB_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.SizeBoth();
@@ -3605,7 +3684,7 @@ namespace fyiReporting.RdlDesign
         private void menuFormatHorzE_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.HorzSpacingMakeEqual();
@@ -3615,7 +3694,7 @@ namespace fyiReporting.RdlDesign
         private void menuFormatHorzI_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.HorzSpacingIncrease();
@@ -3625,7 +3704,7 @@ namespace fyiReporting.RdlDesign
         private void menuFormatHorzD_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.HorzSpacingDecrease();
@@ -3635,7 +3714,7 @@ namespace fyiReporting.RdlDesign
         private void menuFormatHorzZ_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.HorzSpacingMakeZero();
@@ -3645,7 +3724,7 @@ namespace fyiReporting.RdlDesign
         private void menuFormatVertE_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.VertSpacingMakeEqual();
@@ -3655,7 +3734,7 @@ namespace fyiReporting.RdlDesign
         private void menuFormatVertI_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.VertSpacingIncrease();
@@ -3665,7 +3744,7 @@ namespace fyiReporting.RdlDesign
         private void menuFormatVertD_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.VertSpacingDecrease();
@@ -3675,7 +3754,7 @@ namespace fyiReporting.RdlDesign
         private void menuFormatVertZ_Click(object sender, System.EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Editor.DesignCtl.VertSpacingMakeZero();
@@ -3688,15 +3767,15 @@ namespace fyiReporting.RdlDesign
             {
                 string[] s = (string[])e.Data.GetData(DataFormats.FileDrop, false);
                 int i;
-                for (i = 0; i < s.Length; i++)
+                for(i = 0; i < s.Length; i++)
                 {
-                    if (s[i].ToLower().EndsWith(".rdl"))
+                    if(s[i].ToLower().EndsWith(".rdl"))
                     {
                         CreateMDIChild(new Uri(s[i]), null, false);
                     }
                 }
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 MessageBox.Show(ex.Message, Strings.RdlDesigner_ShowD_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -3704,7 +3783,7 @@ namespace fyiReporting.RdlDesign
 
         private void RdlDesigner_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            if(e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 e.Effect = DragDropEffects.All;
             }
@@ -3762,16 +3841,45 @@ namespace fyiReporting.RdlDesign
         private void dOCToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MDIChild mc = this.ActiveMdiChild as MDIChild;
-            if (mc == null)
+            if(mc == null)
                 return;
 
             mc.Export(fyiReporting.RDL.OutputPresentationType.Word);
             return;
         }
-        
+
+        private void RdlDesigner_Shown(object sender, EventArgs e)
+        {
+            if(!CurrentGUID.IsNullOrEmpty())
+            {
+                CreateMDIChild(CurrentGUID, null, false);
+                RdlEditPreview ed = GetEditor();
+                if(ed != null)
+                    ed.CurrentReport = new OpenPOS.Data.Reports.Relatorio(CurrentGUID);
+
+                CurrentGUID = "";
+            }
+        }
+
+        public OpenPOS.GUID CurrentGUID { get; set; }
+
+        private void toolStripButtonDelete_Click(object sender, EventArgs e)
+        {
+            MDIChild mc = this.ActiveMdiChild as MDIChild;
+            if(mc == null)
+            {
+                OpenPOS.MessageBox.ShowWarning("No report was selected");
+                return;
+            }
+
+            if(mc.DeleteReport())
+            {
+                mc.Close();
+            }
+        }
     }
 
-    public class RdlIpcObject : MarshalByRefObject
+    public class RdlIpcObject: MarshalByRefObject
     {
         public RdlIpcObject()
         {

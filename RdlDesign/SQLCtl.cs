@@ -63,7 +63,7 @@ namespace fyiReporting.RdlDesign
             tvTablesColumns.BeginUpdate();
 
             // Get the schema information
-            List<SqlSchemaInfo> si = DesignerUtility.GetSchemaInfo(_Draw, _DataSource);
+            List<SqlSchemaInfo> si = DesignerUtility.GetSchemaInfo();
             if (si != null && si.Count > 0)
             {
                 TreeNode ndRoot = new TreeNode("Tables");
@@ -140,7 +140,7 @@ namespace fyiReporting.RdlDesign
             tvTablesColumns.BeginUpdate();
 
             string sql = "SELECT * FROM " + DesignerUtility.NormalizeSqlName(tNode.Text);
-            List<SqlColumn> tColumns = DesignerUtility.GetSqlColumns(_Draw, _DataSource, sql);
+            List<SqlColumn> tColumns = DesignerUtility.GetSqlColumns(sql);
             bool bFirstTime = true;
             foreach (SqlColumn sc in tColumns)
             {

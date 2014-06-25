@@ -37,28 +37,30 @@ using System.Text.RegularExpressions;
 using Microsoft.Win32;
 using fyiReporting.RDL;
 using fyiReporting.RdlDesign.Resources;
-
+using System.Data.Generic;
+using System.Data.Generic.Schema;
+using System.Linq;
 
 namespace fyiReporting.RdlDesign
 {
-	/// <summary>
-	/// Static utility classes used in the Rdl Designer
-	/// </summary>
-	internal class DesignerUtility
-	{
-		static internal Color ColorFromHtml(string sc, Color dc)
-		{
-			Color c = dc;
-			try 
-			{
-                if (!sc.StartsWith("="))            // don't even try when color is an expression
-				    c = ColorTranslator.FromHtml(sc);
-			}
-			catch 
-			{	// Probably should report this error
-			}
-			return c;
-		}
+    /// <summary>
+    /// Static utility classes used in the Rdl Designer
+    /// </summary>
+    internal class DesignerUtility
+    {
+        static internal Color ColorFromHtml(string sc, Color dc)
+        {
+            Color c = dc;
+            try
+            {
+                if(!sc.StartsWith("="))            // don't even try when color is an expression
+                    c = ColorTranslator.FromHtml(sc);
+            }
+            catch
+            {	// Probably should report this error
+            }
+            return c;
+        }
 #if MONO
         static internal bool IsMono()
         {
@@ -73,74 +75,74 @@ namespace fyiReporting.RdlDesign
         }
 #endif
 
-		/// <summary>
-		/// Read the registry to find out the ODBC names
-		/// </summary>
-		static internal void FillOdbcNames(ComboBox cbOdbcNames)
-		{
-			if (cbOdbcNames.Items.Count > 0)
-				return;
+        /// <summary>
+        /// Read the registry to find out the ODBC names
+        /// </summary>
+        static internal void FillOdbcNames(ComboBox cbOdbcNames)
+        {
+            if(cbOdbcNames.Items.Count > 0)
+                return;
 
-			// System names						   
-			RegistryKey rk = (Registry.LocalMachine).OpenSubKey("Software");
-			if (rk == null)
-				return;
-			rk = rk.OpenSubKey("ODBC");
-			if (rk == null)
-				return;
-			rk = rk.OpenSubKey("ODBC.INI");
-			
-			string[] nms = rk.GetSubKeyNames();
-			if (nms != null)
-			{
-				foreach (string name in nms)
-				{
-					if (name == "ODBC Data Sources" ||
-						name == "ODBC File DSN" || name == "ODBC")
-						continue;
-					cbOdbcNames.Items.Add(name);
-				}
-			}
-			// User names
-			rk = (Registry.CurrentUser).OpenSubKey("Software");
-			if (rk == null)
-				return;
-			rk = rk.OpenSubKey("ODBC");
-			if (rk == null)
-				return;
-			rk = rk.OpenSubKey("ODBC.INI");
-			nms = rk.GetSubKeyNames();
-			if (nms != null)
-			{
-				foreach (string name in nms)
-				{
-					if (name == "ODBC Data Sources" ||
-						name == "ODBC File DSN" || name == "ODBC")
-						continue;
-					cbOdbcNames.Items.Add(name);
-				}
-			}
+            // System names						   
+            RegistryKey rk = (Registry.LocalMachine).OpenSubKey("Software");
+            if(rk == null)
+                return;
+            rk = rk.OpenSubKey("ODBC");
+            if(rk == null)
+                return;
+            rk = rk.OpenSubKey("ODBC.INI");
 
-			return;
+            string[] nms = rk.GetSubKeyNames();
+            if(nms != null)
+            {
+                foreach(string name in nms)
+                {
+                    if(name == "ODBC Data Sources" ||
+                        name == "ODBC File DSN" || name == "ODBC")
+                        continue;
+                    cbOdbcNames.Items.Add(name);
+                }
+            }
+            // User names
+            rk = (Registry.CurrentUser).OpenSubKey("Software");
+            if(rk == null)
+                return;
+            rk = rk.OpenSubKey("ODBC");
+            if(rk == null)
+                return;
+            rk = rk.OpenSubKey("ODBC.INI");
+            nms = rk.GetSubKeyNames();
+            if(nms != null)
+            {
+                foreach(string name in nms)
+                {
+                    if(name == "ODBC Data Sources" ||
+                        name == "ODBC File DSN" || name == "ODBC")
+                        continue;
+                    cbOdbcNames.Items.Add(name);
+                }
+            }
 
-		}
+            return;
 
-		static internal string FormatXml(string sDoc)
-		{
-			XmlDocument xDoc = new XmlDocument();
-			xDoc.PreserveWhitespace = false;
-			xDoc.LoadXml(sDoc);						// this will throw an exception if invalid XML
-			StringWriter sw = new StringWriter();
-			XmlTextWriter xtw = new XmlTextWriter(sw);
-			xtw.IndentChar = ' ';
-			xtw.Indentation = 2;
-			xtw.Formatting = Formatting.Indented;
-			
-			xDoc.WriteContentTo(xtw);
-			xtw.Close();
-			sw.Close();
-			return sw.ToString();
-		}
+        }
+
+        static internal string FormatXml(string sDoc)
+        {
+            XmlDocument xDoc = new XmlDocument();
+            xDoc.PreserveWhitespace = false;
+            xDoc.LoadXml(sDoc);						// this will throw an exception if invalid XML
+            StringWriter sw = new StringWriter();
+            XmlTextWriter xtw = new XmlTextWriter(sw);
+            xtw.IndentChar = ' ';
+            xtw.Indentation = 2;
+            xtw.Formatting = Formatting.Indented;
+
+            xDoc.WriteContentTo(xtw);
+            xtw.Close();
+            sw.Close();
+            return sw.ToString();
+        }
 
         static internal bool GetSharedConnectionInfo(RdlUserControl dsr, string filename, out string dataProvider, out string connectInfo)
         {
@@ -152,9 +154,9 @@ namespace fyiReporting.RdlDesign
             try
             {
                 pswd = dsr.GetPassword();
-                if (pswd == null)
+                if(pswd == null)
                     return false;
-                if (!filename.EndsWith(".dsr", StringComparison.InvariantCultureIgnoreCase))
+                if(!filename.EndsWith(".dsr", StringComparison.InvariantCultureIgnoreCase))
                     filename += ".dsr";
 
                 xml = RDL.DataSourceReference.Retrieve(filename, pswd);
@@ -168,9 +170,9 @@ namespace fyiReporting.RdlDesign
             XmlDocument xDoc = new XmlDocument();
             xDoc.LoadXml(xml);
             XmlNode xNodeLoop = xDoc.FirstChild;
-            foreach (XmlNode node in xNodeLoop.ChildNodes)
+            foreach(XmlNode node in xNodeLoop.ChildNodes)
             {
-                switch (node.Name)
+                switch(node.Name)
                 {
                     case "DataProvider":
                         dataProvider = node.InnerText;
@@ -196,9 +198,9 @@ namespace fyiReporting.RdlDesign
             try
             {
                 pswd = dsr.GetPassword();
-                if (pswd == null)
+                if(pswd == null)
                     return false;
-                if (!filename.EndsWith(".dsr", StringComparison.InvariantCultureIgnoreCase))
+                if(!filename.EndsWith(".dsr", StringComparison.InvariantCultureIgnoreCase))
                     filename += ".dsr";
 
                 xml = RDL.DataSourceReference.Retrieve(filename, pswd);
@@ -212,9 +214,9 @@ namespace fyiReporting.RdlDesign
             XmlDocument xDoc = new XmlDocument();
             xDoc.LoadXml(xml);
             XmlNode xNodeLoop = xDoc.FirstChild;
-            foreach (XmlNode node in xNodeLoop.ChildNodes)
+            foreach(XmlNode node in xNodeLoop.ChildNodes)
             {
-                switch (node.Name)
+                switch(node.Name)
                 {
                     case "DataProvider":
                         dataProvider = node.InnerText;
@@ -228,88 +230,88 @@ namespace fyiReporting.RdlDesign
             }
             return true;
         }
-		static internal void GetSqlData(string dataProvider, string connection, string sql, IList parameters, DataTable dt)
-		{
-			IDbConnection cnSQL=null;
-			IDbCommand cmSQL=null;
-			IDataReader dr=null;	   
-			Cursor saveCursor=Cursor.Current;
-			Cursor.Current = Cursors.WaitCursor;
-			try
-			{
-				// Open up a connection
-				cnSQL = RdlEngineConfig.GetConnection(dataProvider, connection);
-				if (cnSQL == null)
-					return;
+        static internal void GetSqlData(string dataProvider, string connection, string sql, IList parameters, DataTable dt)
+        {
+            IDbConnection cnSQL = null;
+            IDbCommand cmSQL = null;
+            IDataReader dr = null;
+            Cursor saveCursor = Cursor.Current;
+            Cursor.Current = Cursors.WaitCursor;
+            try
+            {
+                // Open up a connection
+                cnSQL = RdlEngineConfig.GetConnection(dataProvider, connection);
+                if(cnSQL == null)
+                    return;
 
-				cnSQL.Open();
-				cmSQL = cnSQL.CreateCommand();
-				cmSQL.CommandText = sql;
-				AddParameters(cmSQL, parameters);
-				dr = cmSQL.ExecuteReader(CommandBehavior.SingleResult);
+                cnSQL.Open();
+                cmSQL = cnSQL.CreateCommand();
+                cmSQL.CommandText = sql;
+                AddParameters(cmSQL, parameters);
+                dr = cmSQL.ExecuteReader(CommandBehavior.SingleResult);
 
-				object[] rowValues = new object[dt.Columns.Count];
+                object[] rowValues = new object[dt.Columns.Count];
 
-				while (dr.Read())
-				{
-					int ci=0;
-					foreach (DataColumn dc in dt.Columns)
-					{
+                while(dr.Read())
+                {
+                    int ci = 0;
+                    foreach(DataColumn dc in dt.Columns)
+                    {
                         object v = dr[dc.ColumnName];
-//                        string val = Convert.ToString(dr[dc.ColumnName], System.Globalization.NumberFormatInfo.InvariantInfo);
-//                        rowValues[ci++] = val;
+                        //                        string val = Convert.ToString(dr[dc.ColumnName], System.Globalization.NumberFormatInfo.InvariantInfo);
+                        //                        rowValues[ci++] = val;
                         rowValues[ci++] = v;
-					}
-					dt.Rows.Add(rowValues);
-				}
-			}
-			finally
-			{
-				if (cnSQL != null)
-				{
-					cnSQL.Close();
-					cnSQL.Dispose();
-					if (cmSQL != null)
-					{
-						cmSQL.Dispose();
-						if (dr != null)
-							dr.Close();
-					}
-				}
-				Cursor.Current=saveCursor;
-			}
-			return;
-		}
+                    }
+                    dt.Rows.Add(rowValues);
+                }
+            }
+            finally
+            {
+                if(cnSQL != null)
+                {
+                    cnSQL.Close();
+                    cnSQL.Dispose();
+                    if(cmSQL != null)
+                    {
+                        cmSQL.Dispose();
+                        if(dr != null)
+                            dr.Close();
+                    }
+                }
+                Cursor.Current = saveCursor;
+            }
+            return;
+        }
 
         static internal bool GetConnnectionInfo(DesignXmlDraw d, string ds, out string dataProvider, out string connection)
         {
             XmlNode dsNode = d.DataSourceName(ds);
             dataProvider = null;
             connection = null;
-            if (dsNode == null)
+            if(dsNode == null)
                 return false;
 
             string dataSourceReference = d.GetElementValue(dsNode, "DataSourceReference", null);
-            if (dataSourceReference != null)
+            if(dataSourceReference != null)
             {
                 //  This is not very pretty code since it is assuming the structure of the windows parenting.
                 //    But there isn't any other way to get this information from here.
                 Control p = d;
                 MDIChild mc = null;
-                while (p != null && !(p is RdlDesigner))
+                while(p != null && !(p is RdlDesigner))
                 {
-                    if (p is MDIChild)
+                    if(p is MDIChild)
                         mc = (MDIChild)p;
 
                     p = p.Parent;
                 }
-                if (p == null || mc == null || mc.SourceFile == null)
+                if(p == null || mc == null || mc.SourceFile == null)
                 {
                     MessageBox.Show(Strings.DataSetRowsCtl_ShowC_UnableLocateDSR);
                     return false;
                 }
                 Uri filename = new Uri(Path.GetDirectoryName(mc.SourceFile.LocalPath) + Path.DirectorySeparatorChar + dataSourceReference);
-                if (!DesignerUtility.GetSharedConnectionInfo((RdlDesigner)p, filename.LocalPath, out dataProvider, out connection))
+                if(!DesignerUtility.GetSharedConnectionInfo((RdlDesigner)p, filename.LocalPath, out dataProvider, out connection))
                 {
                     return false;
                 }
@@ -317,490 +319,316 @@ namespace fyiReporting.RdlDesign
             else
             {
                 XmlNode dp = DesignXmlDraw.FindNextInHierarchy(dsNode, "ConnectionProperties", "DataProvider");
-                if (dp == null)
+                if(dp == null)
                     return false;
                 dataProvider = dp.InnerText;
                 dp = DesignXmlDraw.FindNextInHierarchy(dsNode, "ConnectionProperties", "ConnectString");
-                if (dp == null)
+                if(dp == null)
                     return false;
                 connection = dp.InnerText;
             }
             return true;
         }
 
-        static internal List<SqlColumn> GetSqlColumns(DesignXmlDraw d, string ds, string sql)
-		{
-            string dataProvider;
-            string connection;
+        static internal List<SqlColumn> GetSqlColumns(string sql)
+        {
+            IList parameters = null;
+            return GetSqlColumns(sql, parameters);
+        }
 
-            if (!GetConnnectionInfo(d, ds, out dataProvider, out connection))
-                return null;
-
-            IList parameters=null;
-
-			return GetSqlColumns(dataProvider, connection, sql, parameters);
-		}
-
-        static internal List<SqlColumn> GetSqlColumns(string dataProvider, string connection, string sql, IList parameters)
-		{
+        public static List<SqlColumn> GetSqlColumns(string sql, IList parameters)
+        {
             List<SqlColumn> cols = new List<SqlColumn>();
-			IDbConnection cnSQL=null;
-			IDbCommand cmSQL=null;
-			IDataReader dr=null;	   
-			Cursor saveCursor=Cursor.Current;
-			Cursor.Current = Cursors.WaitCursor;
-			try
-			{
-				// Open up a connection
-				cnSQL = RdlEngineConfig.GetConnection(dataProvider, connection);
-				if (cnSQL == null)
-					return cols;
 
-				cnSQL.Open();
-				cmSQL = cnSQL.CreateCommand();
-				cmSQL.CommandText = sql;
-				AddParameters(cmSQL, parameters);
-				dr = cmSQL.ExecuteReader(CommandBehavior.SchemaOnly);
-				for (int i=0; i < dr.FieldCount; i++)
-				{
-					SqlColumn sc = new SqlColumn();
-                    sc.Name = dr.GetName(i).TrimEnd('\0');
-					sc.DataType = dr.GetFieldType(i);
-					cols.Add(sc);
-				}
-			}
-			catch (SqlException sqle)
-			{
-				MessageBox.Show(sqle.Message, Strings.DesignerUtility_Show_SQLError);
-			}
-			catch (Exception e)
-			{
-				MessageBox.Show(e.InnerException == null? e.Message:e.InnerException.Message, Strings.DesignerUtility_Show_Error);
-			}
-			finally
-			{
-				if (cnSQL != null)
-				{
-					if (cmSQL != null)
-					{
-						cmSQL.Dispose();
-						if (dr != null)
-							dr.Close();
-					}
-					cnSQL.Close();
-					cnSQL.Dispose();
-				}
-				Cursor.Current=saveCursor;
-			}
-			return cols;
-		}
+            Connection connection = new Connection(@"Data Source=U:\Documentacoes_Equipe_ERP\OpenPOS\database\openpos.db;Version=3;");
+            connection.Open();
+            Tables tables = Tables.GetTables(connection);
 
-        static internal List<SqlSchemaInfo> GetSchemaInfo(DesignXmlDraw d, string ds)
-		{
-            string dataProvider;
-            string connection;
+            if(tables.Contains(sql))
+            {
 
-            if (!GetConnnectionInfo(d, ds, out dataProvider, out connection))
-                return null;
-            
-            return GetSchemaInfo(dataProvider, connection);
-		}
-
-        static internal List<SqlSchemaInfo> GetSchemaInfo(string dataProvider, string connection)
-		{
-            List<SqlSchemaInfo> schemaList = new List<SqlSchemaInfo>();
-			IDbConnection cnSQL = null;
-			IDbCommand cmSQL = null;
-			IDataReader dr = null;
-			Cursor saveCursor = Cursor.Current;
-			Cursor.Current = Cursors.WaitCursor;
-
-			// Get the schema information
-			try
-			{
-				int ID_TABLE = 0;
-				int ID_TYPE = 1;
-
-				// Open up a connection
-				cnSQL = RdlEngineConfig.GetConnection(dataProvider, connection);
-				if (cnSQL == null)
-				{
-					MessageBox.Show(string.Format(Strings.DesignerUtility_Show_ConnectDataProviderError,dataProvider), Strings.DesignerUtility_Show_SQLError);
-					return schemaList;
-				}
-				cnSQL.Open();
-
-                // Take advantage of .Net metadata if available
-                if (cnSQL is System.Data.SqlClient.SqlConnection)
-                    return GetSchemaInfo((System.Data.SqlClient.SqlConnection) cnSQL, schemaList);
-                if (cnSQL is System.Data.Odbc.OdbcConnection)
-                    return GetSchemaInfo((System.Data.Odbc.OdbcConnection)cnSQL, schemaList);
-                if (cnSQL is System.Data.OleDb.OleDbConnection)
-                    return GetSchemaInfo((System.Data.OleDb.OleDbConnection)cnSQL, schemaList);
-
-				// Obtain the query needed to get table/view list
-				string sql = RdlEngineConfig.GetTableSelect(dataProvider, cnSQL);
-				if (sql == null || sql.Length == 0)		// when no query string; no meta information available
-					return schemaList;
-
-				// Obtain the query needed to get table/view list
-				cmSQL = cnSQL.CreateCommand();
-				cmSQL.CommandText = sql;
-
-				dr = cmSQL.ExecuteReader();
-				string type = "TABLE";
-				while (dr.Read())
-				{
-					SqlSchemaInfo ssi = new SqlSchemaInfo();
-
-					if (ID_TYPE >= 0 && 
-						dr.FieldCount < ID_TYPE &&
-						(string) dr[ID_TYPE] == "VIEW")
-						type = "VIEW";
-
-					ssi.Type = type;
-					ssi.Name = (string) dr[ID_TABLE];
-					schemaList.Add(ssi);
-				}
-			}
-			catch (SqlException sqle)
-			{
-				MessageBox.Show(sqle.Message, Strings.DesignerUtility_Show_SQLError);
-			}
-			catch (Exception e)
-			{
-				MessageBox.Show(e.InnerException == null? e.Message: e.InnerException.Message, Strings.DesignerUtility_Show_Error);
-			}
-			finally
-			{
-				if (cnSQL != null)
-				{
-					cnSQL.Close();
-					if (cmSQL != null)
-					{
-						cmSQL.Dispose();
-					}
-                    if ((dr != null) && (dataProvider != "SQLite"))
+                cols = new List<SqlColumn>(from c in tables[sql].Fields
+                                           select new SqlColumn
+                                           {
+                                               Name = c.Name,
+                                               DataType = c.GetFieldType()
+                                           });
+            }
+            else
+            {
+                Command cmSQL = null;
+                DataReader dr = null;
+                Cursor saveCursor = Cursor.Current;
+                Cursor.Current = Cursors.WaitCursor;
+                try
+                {
+                    cmSQL = connection.CreateCommand();
+                    cmSQL.CommandText = sql;
+                    AddParameters(cmSQL, parameters);
+                    dr = cmSQL.ExecuteReader(CommandBehavior.SchemaOnly);
+                    for(int i = 0; i < dr.FieldCount; i++)
                     {
-                        dr.Close();
+                        SqlColumn sc = new SqlColumn();
+                        sc.Name = dr.GetName(i).TrimEnd('\0');
+                        sc.DataType = dr.GetFieldType(i);
+                        cols.Add(sc);
                     }
-				}
-				Cursor.Current=saveCursor;
-			}
-			return schemaList;
-		}
-
-        static internal List<SqlSchemaInfo> GetSchemaInfo(System.Data.SqlClient.SqlConnection con, List<SqlSchemaInfo> schemaList)
-        {
-            try
-            { 
-                DataTable tbl = con.GetSchema(System.Data.SqlClient.SqlClientMetaDataCollectionNames.Tables); 
-                foreach (DataRow row in tbl.Rows) 
-                {
-                    SqlSchemaInfo ssi = new SqlSchemaInfo();
-
-                    ssi.Type = "TABLE";
-                    string schema = row["table_schema"] as string;
-                    if (schema != null && schema != "dbo")
-                        ssi.Name = string.Format("{0}.{1}", schema, (string)row["table_name"]);
-                    else
-                    ssi.Name = (string)row["table_name"];
-                    schemaList.Add(ssi);
                 }
-                tbl = con.GetSchema(System.Data.SqlClient.SqlClientMetaDataCollectionNames.Views);
-                foreach (DataRow row in tbl.Rows)
+                catch(SqlException sqle)
                 {
-                    SqlSchemaInfo ssi = new SqlSchemaInfo();
-
-                    ssi.Type = "VIEW";
-                    string schema = row["table_schema"] as string;
-                    if (schema != null && schema != "dbo")
-                        ssi.Name = string.Format("{0}.{1}", schema, (string)row["table_name"]);
-                    else
-                    ssi.Name = (string)row["table_name"];
-                    schemaList.Add(ssi);
-
+                    MessageBox.Show(sqle.Message, Strings.DesignerUtility_Show_SQLError);
+                }
+                catch(Exception e)
+                {
+                    MessageBox.Show(e.InnerException == null ? e.Message : e.InnerException.Message, Strings.DesignerUtility_Show_Error);
+                }
+                finally
+                {
+                    if(connection != null)
+                    {
+                        if(cmSQL != null)
+                        {
+                            cmSQL.Dispose();
+                            if(dr != null)
+                                dr.Close();
+                        }
+                        connection.Close();
+                        connection.Dispose();
+                    }
+                    Cursor.Current = saveCursor;
                 }
             }
-            catch
-            { 
-            }
-            schemaList.Sort();
-            return schemaList;
+            return cols;
         }
 
-        static internal List<SqlSchemaInfo> GetSchemaInfo(System.Data.OleDb.OleDbConnection con, List<SqlSchemaInfo> schemaList)
+        static internal List<SqlSchemaInfo> GetSchemaInfo()
         {
-            try
+            using(Connection connection = new Connection())
             {
-                DataTable tbl = con.GetSchema(System.Data.OleDb.OleDbMetaDataCollectionNames.Tables);
-                foreach (DataRow row in tbl.Rows)
-                {
-                    SqlSchemaInfo ssi = new SqlSchemaInfo();
+                connection.Open();
+                Tables tables = Tables.GetTables(connection);
 
-                    ssi.Type = "TABLE";
-                    ssi.Name = (string)row["table_name"];
-                    schemaList.Add(ssi);
-                }
-                tbl = con.GetSchema(System.Data.OleDb.OleDbMetaDataCollectionNames.Views);
-                foreach (DataRow row in tbl.Rows)
-                {
-                    SqlSchemaInfo ssi = new SqlSchemaInfo();
-
-                    ssi.Type = "VIEW";
-                    ssi.Name = (string)row["table_name"];
-                    schemaList.Add(ssi);
-                }
+                return new List<SqlSchemaInfo>(from t in tables
+                                               select new SqlSchemaInfo
+                                               {
+                                                   Type = "TABLE",
+                                                   Name = t.Name
+                                               });
             }
-            catch
-            {
-            }
-            schemaList.Sort();
-            return schemaList;
-        }
-
-        static internal List<SqlSchemaInfo> GetSchemaInfo(System.Data.Odbc.OdbcConnection con, List<SqlSchemaInfo> schemaList)
-        {
-            try
-            {
-                DataTable tbl = con.GetSchema(System.Data.Odbc.OdbcMetaDataCollectionNames.Tables);
-                foreach (DataRow row in tbl.Rows)
-                {
-                    SqlSchemaInfo ssi = new SqlSchemaInfo();
-
-                    ssi.Type = "TABLE";
-                    ssi.Name = (string)row["table_name"];
-                    schemaList.Add(ssi);
-                }
-                tbl = con.GetSchema(System.Data.Odbc.OdbcMetaDataCollectionNames.Views);
-                foreach (DataRow row in tbl.Rows)
-                {
-                    SqlSchemaInfo ssi = new SqlSchemaInfo();
-
-                    ssi.Type = "VIEW";
-                    ssi.Name = (string)row["table_name"];
-                    schemaList.Add(ssi);
-                }
-            }
-            catch
-            {
-            }
-            schemaList.Sort();
-            return schemaList;
         }
 
         static internal string NormalizeSqlName(string name)
         {	// Routine ensures valid sql name
-            if (name == null || name.Length == 0)
+            if(name == null || name.Length == 0)
                 return "";
 
             // split out the owner name (schema)
             string schema = null;
             int si = name.IndexOf('.');
-            if (si >= 0)
+            if(si >= 0)
             {
                 schema = name.Substring(0, si);
-                name = name.Substring(si+1);
+                name = name.Substring(si + 1);
             }
 
             bool bLetterOrDigit = (Char.IsLetter(name, 0) || name[0] == '_');   // special rules for 1st character
-            for (int i = 0; i < name.Length && bLetterOrDigit; i++)
+            for(int i = 0; i < name.Length && bLetterOrDigit; i++)
             {
-                if (name[i] == '.')
+                if(name[i] == '.')
                 { }						// allow names to have a "." for owner qualified tables
-                else if (!(Char.IsLetterOrDigit(name, i) || name[i] == '#' || name[i] == '_'))
+                else if(!(Char.IsLetterOrDigit(name, i) || name[i] == '#' || name[i] == '_'))
                     bLetterOrDigit = false;
             }
-            if (!bLetterOrDigit)
+            if(!bLetterOrDigit)
                 name = "\"" + name + "\"";
 
-            if (schema == null)
+            if(schema == null)
                 return name;
             return schema + "." + name;
         }
 
-		static internal bool TestConnection(string dataProvider, string connection)
-		{
-			IDbConnection cnSQL=null;
-			bool bResult = false;
-			try
-			{
-				cnSQL = RdlEngineConfig.GetConnection(dataProvider, connection);
-				cnSQL.Open();
-				bResult = true;			// we opened the connection
-			}
-			catch (Exception e)
-			{
-				MessageBox.Show(e.InnerException == null? e.Message: e.InnerException.Message, Strings.DesignerUtility_Show_OpenConnectionError);
-			}
-			finally
-			{
-				if (cnSQL != null)
-				{
-					cnSQL.Close();
-					cnSQL.Dispose();
-				}
-			}
-			return bResult;
-		}
+        static internal bool TestConnection(string dataProvider, string connection)
+        {
+            IDbConnection cnSQL = null;
+            bool bResult = false;
+            try
+            {
+                cnSQL = RdlEngineConfig.GetConnection(dataProvider, connection);
+                cnSQL.Open();
+                bResult = true;			// we opened the connection
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show(e.InnerException == null ? e.Message : e.InnerException.Message, Strings.DesignerUtility_Show_OpenConnectionError);
+            }
+            finally
+            {
+                if(cnSQL != null)
+                {
+                    cnSQL.Close();
+                    cnSQL.Dispose();
+                }
+            }
+            return bResult;
+        }
 
-		static internal bool IsNumeric(Type t)
-		{
-			string st = t.ToString();	
-			switch (st)
-			{
-				case "System.Int16":
-				case "System.Int32":
-				case "System.Int64":
-				case "System.Single":
-				case "System.Double":
-				case "System.Decimal":
-					return true;
-				default:
-					return false;
-			}
-		}
+        static internal bool IsNumeric(Type t)
+        {
+            string st = t.ToString();
+            switch(st)
+            {
+                case "System.Int16":
+                case "System.Int32":
+                case "System.Int64":
+                case "System.Single":
+                case "System.Double":
+                case "System.Decimal":
+                    return true;
+                default:
+                    return false;
+            }
+        }
 
-		/// <summary>
-		/// Validates a size parameter
-		/// </summary>
-		/// <param name="t"></param>
-		/// <param name="bZero">true if 0 is valid size</param>
-		/// <param name="bMinus">true if minus is allowed</param>
-		/// <returns>Throws exception with the invalid message</returns>
-		internal static void ValidateSize(string t, bool bZero, bool bMinus)
-		{
-			t = t.Trim();
-			if (t.Length == 0) // not specified is ok?
-				return;
+        /// <summary>
+        /// Validates a size parameter
+        /// </summary>
+        /// <param name="t"></param>
+        /// <param name="bZero">true if 0 is valid size</param>
+        /// <param name="bMinus">true if minus is allowed</param>
+        /// <returns>Throws exception with the invalid message</returns>
+        internal static void ValidateSize(string t, bool bZero, bool bMinus)
+        {
+            t = t.Trim();
+            if(t.Length == 0) // not specified is ok?
+                return;
 
-			// Ensure we have valid units
-			if (t.IndexOf("in") < 0 &&
-			    t.IndexOf("cm") < 0 &&
-			    t.IndexOf("mm") < 0 &&
-			    t.IndexOf("pt") < 0 &&
-			    t.IndexOf("pc") < 0)
-			{
-				throw new Exception(Strings.DesignerUtility_Error_SizeUnitInvalid);
-			}
+            // Ensure we have valid units
+            if(t.IndexOf("in") < 0 &&
+                t.IndexOf("cm") < 0 &&
+                t.IndexOf("mm") < 0 &&
+                t.IndexOf("pt") < 0 &&
+                t.IndexOf("pc") < 0)
+            {
+                throw new Exception(Strings.DesignerUtility_Error_SizeUnitInvalid);
+            }
 
-			int space = t.LastIndexOf(' ');
+            int space = t.LastIndexOf(' ');
 
-			string n = ""; // number string
-			string u; // unit string
+            string n = ""; // number string
+            string u; // unit string
 
-			if (space != -1) // any spaces
-			{
-				n = t.Substring(0, space).Trim(); // number string
-				u = t.Substring(space).Trim(); // unit string
-			}
-			else if (t.Length >= 3)
-			{
-				n = t.Substring(0, t.Length - 2).Trim();
-				u = t.Substring(t.Length - 2).Trim();
-			}
+            if(space != -1) // any spaces
+            {
+                n = t.Substring(0, space).Trim(); // number string
+                u = t.Substring(space).Trim(); // unit string
+            }
+            else if(t.Length >= 3)
+            {
+                n = t.Substring(0, t.Length - 2).Trim();
+                u = t.Substring(t.Length - 2).Trim();
+            }
 
 
-			if (n.Length == 0 || !Regex.IsMatch(n, @"\A[ ]*[-]?[0-9]*[.]?[0-9]*[ ]*\Z"))
-			{
-				throw new Exception(Strings.DesignerUtility_Error_NumberFormatinvalid);
-			}
+            if(n.Length == 0 || !Regex.IsMatch(n, @"\A[ ]*[-]?[0-9]*[.]?[0-9]*[ ]*\Z"))
+            {
+                throw new Exception(Strings.DesignerUtility_Error_NumberFormatinvalid);
+            }
 
-			float v = DesignXmlDraw.GetSize(t);
-			if (!bZero)
-			{
-				if (v < .1)
-					throw new Exception(Strings.DesignerUtility_Error_SizeZero);
-			}
-			else if (v < 0 && !bMinus)
-				throw new Exception(Strings.DesignerUtility_Error_SizeLessZero);
-		}
+            float v = DesignXmlDraw.GetSize(t);
+            if(!bZero)
+            {
+                if(v < .1)
+                    throw new Exception(Strings.DesignerUtility_Error_SizeZero);
+            }
+            else if(v < 0 && !bMinus)
+                throw new Exception(Strings.DesignerUtility_Error_SizeLessZero);
+        }
 
-		static internal string MakeValidSize(string t, bool bZero)
-		{
-			return MakeValidSize(t, bZero, false);
-		}
+        static internal string MakeValidSize(string t, bool bZero)
+        {
+            return MakeValidSize(t, bZero, false);
+        }
 
-		/// <summary>
-		/// Ensures that a user provided string results in a valid size
-		/// </summary>
-		/// <param name="t"></param>
-		/// <returns></returns>
-		static internal string MakeValidSize(string t, bool bZero, bool bNegative)
-		{
-			// Ensure we have valid units
-			if (t.IndexOf("in") < 0 &&
-				t.IndexOf("cm") < 0 &&
-				t.IndexOf("mm") < 0 &&
-				t.IndexOf("pt") < 0 &&
-				t.IndexOf("pc") < 0)
-			{
-				t += "in";
-			}
+        /// <summary>
+        /// Ensures that a user provided string results in a valid size
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        static internal string MakeValidSize(string t, bool bZero, bool bNegative)
+        {
+            // Ensure we have valid units
+            if(t.IndexOf("in") < 0 &&
+                t.IndexOf("cm") < 0 &&
+                t.IndexOf("mm") < 0 &&
+                t.IndexOf("pt") < 0 &&
+                t.IndexOf("pc") < 0)
+            {
+                t += "in";
+            }
 
-			float v = DesignXmlDraw.GetSize(t);
-			if (!bZero)
-			{
-				if (v < .1)
-					t = ".1pt";
-			}
-			if (!bNegative)
-			{
-				if (v < 0)
-					t = "0in";
-			}
+            float v = DesignXmlDraw.GetSize(t);
+            if(!bZero)
+            {
+                if(v < .1)
+                    t = ".1pt";
+            }
+            if(!bNegative)
+            {
+                if(v < 0)
+                    t = "0in";
+            }
 
-			return t;
-		}
+            return t;
+        }
 
-		static private void AddParameters(IDbCommand cmSQL, IList parameters)
-		{
-			if (parameters == null || parameters.Count <= 0)
-				return;
+        static private void AddParameters(IDbCommand cmSQL, IList parameters)
+        {
+            if(parameters == null || parameters.Count <= 0)
+                return;
 
-			foreach(ReportParm rp in parameters)
-			{
-				string paramName;
+            foreach(ReportParm rp in parameters)
+            {
+                string paramName;
 
-				// force the name to start with @
-				if (rp.Name[0] == '@')
-					paramName = rp.Name;
-				else
-					paramName = "@" + rp.Name;
+                // force the name to start with @
+                if(rp.Name[0] == '@')
+                    paramName = rp.Name;
+                else
+                    paramName = "@" + rp.Name;
 
-				IDbDataParameter dp = cmSQL.CreateParameter();
-				dp.ParameterName = paramName;
-				if (rp.DefaultValue == null || rp.DefaultValue.Count == 0)
-				{
-					object pvalue=null;
-					// put some dummy values in it;  some drivers (e.g. mysql odbc) don't like null values
-					switch (rp.DataType.ToLower())
-					{
-						case "datetime":
+                IDbDataParameter dp = cmSQL.CreateParameter();
+                dp.ParameterName = paramName;
+                if(rp.DefaultValue == null || rp.DefaultValue.Count == 0)
+                {
+                    object pvalue = null;
+                    // put some dummy values in it;  some drivers (e.g. mysql odbc) don't like null values
+                    switch(rp.DataType.ToLower())
+                    {
+                        case "datetime":
                             pvalue = new DateTime(1900, 1, 1);
-							break;
-						case "double":
-							pvalue = new double();
-							break;
-						case "boolean":
-							pvalue = new Boolean();
-							break;
-						case "string":
-						default:
-							pvalue = (object) "";
-							break;
-					}
-					dp.Value = pvalue;
-				}
-				else
-				{
-					string val = (string) rp.DefaultValue[0];
-					dp.Value = val;
-				}
+                            break;
+                        case "double":
+                            pvalue = new double();
+                            break;
+                        case "boolean":
+                            pvalue = new Boolean();
+                            break;
+                        case "string":
+                        default:
+                            pvalue = (object)"";
+                            break;
+                    }
+                    dp.Value = pvalue;
+                }
+                else
+                {
+                    string val = (string)rp.DefaultValue[0];
+                    dp.Value = val;
+                }
 
-				cmSQL.Parameters.Add(dp);
-			}
-		}
+                cmSQL.Parameters.Add(dp);
+            }
+        }
 
         // From Paul Welter's site: http://weblogs.asp.net/pwelter34/archive/2006/02/08/437677.aspx
 
@@ -814,13 +642,13 @@ namespace fyiReporting.RdlDesign
         /// <exception cref="ArgumentException"></exception>
         public static string RelativePathTo(string fromDirectory, string toPath)
         {
-            if (fromDirectory == null)
+            if(fromDirectory == null)
                 throw new ArgumentNullException("fromDirectory");
-            if (toPath == null)
+            if(toPath == null)
                 throw new ArgumentNullException("fromDirectory");
-            if (System.IO.Path.IsPathRooted(fromDirectory) && System.IO.Path.IsPathRooted(toPath))
+            if(System.IO.Path.IsPathRooted(fromDirectory) && System.IO.Path.IsPathRooted(toPath))
             {
-                if (string.Compare(System.IO.Path.GetPathRoot(fromDirectory),
+                if(string.Compare(System.IO.Path.GetPathRoot(fromDirectory),
                 System.IO.Path.GetPathRoot(toPath), true) != 0)
                 {
                     throw new ArgumentException(
@@ -834,24 +662,24 @@ namespace fyiReporting.RdlDesign
             int length = Math.Min(fromDirectories.Length, toDirectories.Length);
             int lastCommonRoot = -1;
             // find common root
-            for (int x = 0; x < length; x++)
+            for(int x = 0; x < length; x++)
             {
-                if (string.Compare(fromDirectories[x], toDirectories[x], true) != 0)
+                if(string.Compare(fromDirectories[x], toDirectories[x], true) != 0)
                     break;
                 lastCommonRoot = x;
             }
-            if (lastCommonRoot == -1)
+            if(lastCommonRoot == -1)
             {
                 throw new ArgumentException(
                 string.Format("The paths '{0} and '{1}' do not have a common prefix path.",
                 fromDirectory, toPath));
             }
             // add relative folders in from path
-            for (int x = lastCommonRoot + 1; x < fromDirectories.Length; x++)
-                if (fromDirectories[x].Length > 0)
+            for(int x = lastCommonRoot + 1; x < fromDirectories.Length; x++)
+                if(fromDirectories[x].Length > 0)
                     relativePath.Add("..");
             // add to folders to path
-            for (int x = lastCommonRoot + 1; x < toDirectories.Length; x++)
+            for(int x = lastCommonRoot + 1; x < toDirectories.Length; x++)
                 relativePath.Add(toDirectories[x]);
             // create relative path
             string[] relativeParts = new string[relativePath.Count];
@@ -860,181 +688,185 @@ namespace fyiReporting.RdlDesign
             return newPath;
         }
 
-	}
+        public static OpenPOS.Model.Desktop.IDisplayValues DisplayReports()
+        {
+            return new OpenPOS.Data.Reports.Relatorio().GetDisplayValues();
+        }
+    }
 
-	internal class SqlColumn
-	{
-		string _Name;
-		Type _DataType;
+    internal class SqlColumn
+    {
+        string _Name;
+        Type _DataType;
 
-		override public string ToString()
-		{
-			return _Name;
-		}
+        override public string ToString()
+        {
+            return _Name;
+        }
 
-		internal string Name
-		{
-			get {return _Name;}
-			set {_Name = value;}
-		}
+        internal string Name
+        {
+            get { return _Name; }
+            set { _Name = value; }
+        }
 
-		internal Type DataType
-		{
-			get {return _DataType;}
-			set {_DataType = value;}
-		}
-	}
+        internal Type DataType
+        {
+            get { return _DataType; }
+            set { _DataType = value; }
+        }
+    }
 
-	internal class SqlSchemaInfo : IComparable<SqlSchemaInfo>
-	{
-		string _Name;
-		string _Type;
+    internal class SqlSchemaInfo: IComparable<SqlSchemaInfo>
+    {
+        string _Name;
+        string _Type;
 
-		internal string Name
-		{
-			get {return _Name;}
-			set {_Name = value;}
-		}
+        internal string Name
+        {
+            get { return _Name; }
+            set { _Name = value; }
+        }
 
-		internal string Type
-		{
-			get {return _Type;}
-			set {_Type = value;}
-		}
+        internal string Type
+        {
+            get { return _Type; }
+            set { _Type = value; }
+        }
 
         #region IComparable<SqlSchemaInfo> Members
 
         int IComparable<SqlSchemaInfo>.CompareTo(SqlSchemaInfo other)
         {
-            return (this._Type == other._Type)?
-                string.Compare(this.Name, other.Name):
+            return (this._Type == other._Type) ?
+                string.Compare(this.Name, other.Name) :
                 string.Compare(this.Type, other.Type);
         }
 
         #endregion
-	}
+    }
 
-	internal class ReportParm
-	{
-		string _Name;
-		string _Prompt;
-		string _DataType;
-		
-		bool   _bDefault=true;				// use default value if true otherwise DataSetName
+    internal class ReportParm
+    {
+        string _Name;
+        string _Prompt;
+        string _DataType;
+
+        bool _bDefault = true;				// use default value if true otherwise DataSetName
         List<string> _DefaultValue;			// list of strings
-		string _DefaultDSRDataSetName;		// DefaultValues DataSetReference DataSetName
-		string _DefaultDSRValueField;		// DefaultValues DataSetReference ValueField
+        string _DefaultDSRDataSetName;		// DefaultValues DataSetReference DataSetName
+        string _DefaultDSRValueField;		// DefaultValues DataSetReference ValueField
 
-		bool   _bValid=true;				// use valid value if true otherwise DataSetName
+        bool _bValid = true;				// use valid value if true otherwise DataSetName
         List<ParameterValueItem> _ValidValues;	// list of ParameterValueItem
-		string _ValidValuesDSRDataSetName;		// ValidValues DataSetReference DataSetName
-		string _ValidValuesDSRValueField;		// ValidValues DataSetReference ValueField
-		string _ValidValuesDSRLabelField;		// ValidValues DataSetReference LabelField
-		bool _AllowNull;
-		bool _AllowBlank;
+        string _ValidValuesDSRDataSetName;		// ValidValues DataSetReference DataSetName
+        string _ValidValuesDSRValueField;		// ValidValues DataSetReference ValueField
+        string _ValidValuesDSRLabelField;		// ValidValues DataSetReference LabelField
+        bool _AllowNull;
+        bool _AllowBlank;
         bool _MultiValue;
 
-		internal ReportParm(string name)
-		{
-			_Name = name;
-			_DataType = "String";
-		}
+        internal ReportParm(string name)
+        {
+            _Name = name;
+            _DataType = "String";
+        }
 
-		internal string Name
-		{
-			get {return _Name;}
-			set {_Name = value;}
-		}
+        internal string Name
+        {
+            get { return _Name; }
+            set { _Name = value; }
+        }
 
-		internal string Prompt
-		{
-			get {return _Prompt;}
-			set {_Prompt = value;}
-		}
+        internal string Prompt
+        {
+            get { return _Prompt; }
+            set { _Prompt = value; }
+        }
 
-		internal string DataType
-		{
-			get {return _DataType;}
-			set {_DataType = value;}
-		}
+        internal string DataType
+        {
+            get { return _DataType; }
+            set { _DataType = value; }
+        }
 
-		internal bool Valid
-		{
-			get {return _bValid;}
-			set {_bValid = value;}
-		}
+        internal bool Valid
+        {
+            get { return _bValid; }
+            set { _bValid = value; }
+        }
 
         internal List<ParameterValueItem> ValidValues
-		{
-			get {return _ValidValues;}
-			set {_ValidValues = value;}
-		}
+        {
+            get { return _ValidValues; }
+            set { _ValidValues = value; }
+        }
 
-		internal string ValidValuesDisplay
-		{
-			get 
-			{
-				if (_ValidValues == null || _ValidValues.Count == 0)
-					return "";
-				StringBuilder sb = new StringBuilder();
-				bool bFirst = true;
-				foreach (ParameterValueItem pvi in _ValidValues)
-				{
-					if (bFirst)
-						bFirst = false;
-					else
-						sb.Append(", ");
-					if (pvi.Label != null)
-						sb.AppendFormat("{0}={1}", pvi.Value, pvi.Label);
-					else
-						sb.Append(pvi.Value);
-				}
-				return sb.ToString();
-			}
-		}
+        internal string ValidValuesDisplay
+        {
+            get
+            {
+                if(_ValidValues == null || _ValidValues.Count == 0)
+                    return "";
+                StringBuilder sb = new StringBuilder();
+                bool bFirst = true;
+                foreach(ParameterValueItem pvi in _ValidValues)
+                {
+                    if(bFirst)
+                        bFirst = false;
+                    else
+                        sb.Append(", ");
+                    if(pvi.Label != null)
+                        sb.AppendFormat("{0}={1}", pvi.Value, pvi.Label);
+                    else
+                        sb.Append(pvi.Value);
+                }
+                return sb.ToString();
+            }
+        }
 
-		internal bool Default
-		{
-			get {return _bDefault;}
-			set {_bDefault = value;}
-		}
+        internal bool Default
+        {
+            get { return _bDefault; }
+            set { _bDefault = value; }
+        }
 
-		internal List<string> DefaultValue
-		{
-			get {return _DefaultValue;}
-			set {_DefaultValue = value;}
-		}
+        internal List<string> DefaultValue
+        {
+            get { return _DefaultValue; }
+            set { _DefaultValue = value; }
+        }
 
-		internal string DefaultValueDisplay
-		{
-			get 
-			{
-				if (_DefaultValue == null || _DefaultValue.Count == 0)
-					return "";
-				StringBuilder sb = new StringBuilder();
-				bool bFirst = true;
-				foreach (string dv in _DefaultValue)
-				{
-					if (bFirst)
-						bFirst = false;
-					else
-						sb.Append(", ");
-					sb.Append(dv);
-				}
-				return sb.ToString();
-			}
-		}
-		internal bool AllowNull
-		{
-			get {return _AllowNull;}
-			set {_AllowNull = value;}
-		}
+        internal string DefaultValueDisplay
+        {
+            get
+            {
+                if(_DefaultValue == null || _DefaultValue.Count == 0)
+                    return "";
+                StringBuilder sb = new StringBuilder();
+                bool bFirst = true;
+                foreach(string dv in _DefaultValue)
+                {
+                    if(bFirst)
+                        bFirst = false;
+                    else
+                        sb.Append(", ");
+                    sb.Append(dv);
+                }
+                return sb.ToString();
+            }
+        }
+        internal bool AllowNull
+        {
+            get { return _AllowNull; }
+            set { _AllowNull = value; }
+        }
 
-		internal bool AllowBlank
-		{
-			get {return _AllowBlank;}
-			set {_AllowBlank = value;}
-		}
+        internal bool AllowBlank
+        {
+            get { return _AllowBlank; }
+            set { _AllowBlank = value; }
+        }
 
         internal bool MultiValue
         {
@@ -1042,49 +874,49 @@ namespace fyiReporting.RdlDesign
             set { _MultiValue = value; }
         }
         internal string DefaultDSRDataSetName
-		{
-			get {return _DefaultDSRDataSetName;}
-			set {_DefaultDSRDataSetName=value;}
-		}
-		internal string DefaultDSRValueField
-		{
-			get {return _DefaultDSRValueField;}
-			set {_DefaultDSRValueField=value;}
-		}
+        {
+            get { return _DefaultDSRDataSetName; }
+            set { _DefaultDSRDataSetName = value; }
+        }
+        internal string DefaultDSRValueField
+        {
+            get { return _DefaultDSRValueField; }
+            set { _DefaultDSRValueField = value; }
+        }
 
-		internal string ValidValuesDSRDataSetName
-		{
-			get {return _ValidValuesDSRDataSetName;}
-			set {_ValidValuesDSRDataSetName=value;}
-		}
-		internal string  ValidValuesDSRValueField
-		{
-			get {return _ValidValuesDSRValueField;}
-			set {_ValidValuesDSRValueField=value;}
-		}
-		internal string ValidValuesDSRLabelField
-		{
-			get {return _ValidValuesDSRLabelField;}
-			set {_ValidValuesDSRLabelField=value;}
-		}
+        internal string ValidValuesDSRDataSetName
+        {
+            get { return _ValidValuesDSRDataSetName; }
+            set { _ValidValuesDSRDataSetName = value; }
+        }
+        internal string ValidValuesDSRValueField
+        {
+            get { return _ValidValuesDSRValueField; }
+            set { _ValidValuesDSRValueField = value; }
+        }
+        internal string ValidValuesDSRLabelField
+        {
+            get { return _ValidValuesDSRLabelField; }
+            set { _ValidValuesDSRLabelField = value; }
+        }
 
-		override public string ToString()
-		{
-			return _Name;
-		}
-	}
+        override public string ToString()
+        {
+            return _Name;
+        }
+    }
 
-	internal class ParameterValueItem
-	{
-		internal string Value;
-		internal string Label;
-	}
+    internal class ParameterValueItem
+    {
+        internal string Value;
+        internal string Label;
+    }
 
-	internal class StaticLists
-	{
-		/// <summary>
-		/// Names of colors to put into lists
-		/// </summary>
+    internal class StaticLists
+    {
+        /// <summary>
+        /// Names of colors to put into lists
+        /// </summary>
         static public readonly string[] ColorListColorSort = new string[] {
             "Black", 
             "White", 
@@ -1226,7 +1058,7 @@ namespace fyiReporting.RdlDesign
             "LightPink",
 			"Floralwhite"
         };
-		static public readonly string[] ColorList = new string[] {
+        static public readonly string[] ColorList = new string[] {
 										"Aliceblue",
 										"Antiquewhite",
 										"Aqua",
@@ -1367,10 +1199,10 @@ namespace fyiReporting.RdlDesign
 										"Whitesmoke",
 										"Yellow",
 										"Yellowgreen"};
-		/// <summary>
-		/// Names of globals to put into expressions
-		/// </summary>
-		static public readonly string[] GlobalList = new string[] {
+        /// <summary>
+        /// Names of globals to put into expressions
+        /// </summary>
+        static public readonly string[] GlobalList = new string[] {
 																	  "=Globals!PageNumber",
 																	  "=Globals!TotalPages",
 																	  "=Globals!ExecutionTime",
@@ -1389,15 +1221,15 @@ namespace fyiReporting.RdlDesign
 								" and ", " or ", 
 								" = ", " != ", " > ", " >= ", " < ", " <= "	};
 
-		/// <summary>
-		/// Names of functions with pseudo arguments
-		/// </summary>
-		static public readonly string[] FunctionList = new string[] {	"Iif(boolean, trueExpr, falseExpr)",
+        /// <summary>
+        /// Names of functions with pseudo arguments
+        /// </summary>
+        static public readonly string[] FunctionList = new string[] {	"Iif(boolean, trueExpr, falseExpr)",
 																		"Choose(number, choice1 [,choice2]...)",
 																		"Switch(boolean1, value1[, boolean2, value2]...[elseValue])",
 																		"Format(expr, formatExpr)"};
 
-		static public readonly string[] AggrFunctionList = new string[] {"Sum(number [, scope])",
+        static public readonly string[] AggrFunctionList = new string[] {"Sum(number [, scope])",
 																		"Aggregate(number [, scope])",
 																		"Avg(number [, scope])",
 																		"Min(expr [, scope])",
@@ -1424,10 +1256,10 @@ namespace fyiReporting.RdlDesign
 																		"Stdevp(expr [, scope])",
 																		"Var(expr [, scope])",
 																		"Varp(expr [, scope])"};
-		/// <summary>
-		/// Zoom values
-		/// </summary>
-		static public readonly string[] ZoomList = new string[] {
+        /// <summary>
+        /// Zoom values
+        /// </summary>
+        static public readonly string[] ZoomList = new string[] {
 									"Actual Size",
 									"Fit Page",
 									"Fit Width",
@@ -1460,5 +1292,5 @@ namespace fyiReporting.RdlDesign
         static public readonly string[] GradientList = new string[] {
         "None", "LeftRight", "TopBottom", "Center", "DiagonalLeft",
         "DiagonalRight", "HorizontalCenter", "VerticalCenter"};
-	}
+    }
 }
