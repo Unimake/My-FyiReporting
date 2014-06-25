@@ -36,6 +36,8 @@ using System.Globalization;
 using System.Xml;
 using fyiReporting.RDL;
 using fyiReporting.RdlDesign.Resources;
+using System.Data.Generic;
+using System.Linq;
 
 namespace fyiReporting.RdlDesign
 {
@@ -1203,11 +1205,59 @@ namespace fyiReporting.RdlDesign
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            if(!DoReportSyntax(false))
+            OpenPOS.Model.Reports.IRelatorio relatorio = null;
+
+            OpenPOS.GUID guid = OpenPOS.GUID.Empty;
+
+            DataGridViewRow row = grdTemplate.Rows.Cast<DataGridViewRow>().FirstOrDefault(w => Convert.ToBoolean(w.Cells[col_Selecionar.Index].Value) == true);
+
+            if(row != null)
+            {
+                guid = (OpenPOS.GUID)row.Cells[col_GUID.Index].Value;
+                relatorio = new OpenPOS.Data.Reports.Relatorio(guid);
+                _ResultReport = relatorio.Script;
+            }
+            else if(DoReportSyntax(false))
+            {
+                _ResultReport = tbReportSyntax.Text;
+            }
+            else
                 return;
+
             DialogResult = DialogResult.OK;
-            _ResultReport = tbReportSyntax.Text;
             this.Close();
+        }
+
+        private void grdTemplate_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        {
+            //Permite somente um "Template"
+            for(int i = 0; i < grdTemplate.Rows.Count; i++)
+            {
+                if(e.RowIndex == grdTemplate.Rows[i].Index)
+                    grdTemplate.Rows[i].Cells[col_Selecionar.Index].Value = true;
+                else
+                    grdTemplate.Rows[i].Cells[col_Selecionar.Index].Value = false;
+            }
+        }
+
+        private void DialogDatabase_Load(object sender, EventArgs e)
+        {
+            //Filtra os relatórios que são apenas "Template"
+            IList<OpenPOS.Model.Reports.IRelatorio> results = new OpenPOS.Data.Reports.Relatorio().Find<OpenPOS.Model.Reports.IRelatorio>(new Where 
+            { 
+                { "rel_Relatorio.Template", true }
+            });
+
+            //Popula a grid com os relatórios que são "Templates"
+            foreach(OpenPOS.Model.Reports.IRelatorio rel in results)
+            {
+                grdTemplate.Rows.Add(new object[]
+                {
+                    rel.GUID,
+                    false,
+                    rel.Nome
+                });
+            }
         }
     }
 }

@@ -214,7 +214,7 @@
     <value>rdlViewer1</value>
   </data>
   <data name="&gt;&gt;rdlViewer1.Type" xml:space="preserve">
-    <value>fyiReporting.RdlViewer.RdlViewer, RdlViewer, Version=4.5.5288.19642, Culture=neutral, PublicKeyToken=null</value>
+    <value>fyiReporting.RdlViewer.RdlViewer, RdlViewer, Version=4.5.5289.18960, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;rdlViewer1.Parent" xml:space="preserve">
     <value>ReportPreview</value>
@@ -450,6 +450,18 @@
   <data name="&gt;&gt;TabularGroup.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
+  <data name="col_GUID.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="col_Selecionar.HeaderText" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="col_Selecionar.Width" type="System.Int32, mscorlib">
+    <value>25</value>
+  </data>
+  <data name="col_Nome.HeaderText" xml:space="preserve">
+    <value>Nome do relatório</value>
+  </data>
   <data name="splitContainer1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
@@ -643,7 +655,7 @@
     <value>reportParameterCtl1</value>
   </data>
   <data name="&gt;&gt;reportParameterCtl1.Type" xml:space="preserve">
-    <value>fyiReporting.RdlDesign.ReportParameterCtl, RdlDesigner, Version=4.5.5288.19646, Culture=neutral, PublicKeyToken=null</value>
+    <value>fyiReporting.RdlDesign.ReportParameterCtl, RdlDesigner, Version=4.5.5289.18965, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;reportParameterCtl1.Parent" xml:space="preserve">
     <value>ReportParameters</value>
@@ -675,14 +687,62 @@
   <data name="&gt;&gt;ReportParameters.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
+  <data name="grdTemplate.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="grdTemplate.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 16</value>
+  </data>
+  <data name="grdTemplate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>295, 271</value>
+  </data>
+  <data name="grdTemplate.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;grdTemplate.Name" xml:space="preserve">
+    <value>grdTemplate</value>
+  </data>
+  <data name="&gt;&gt;grdTemplate.Type" xml:space="preserve">
+    <value>OpenPOS.Desktop.ComponentModel.GridPanel, OpenPOS.Desktop.ComponentModel, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;grdTemplate.Parent" xml:space="preserve">
+    <value>gbTemplate</value>
+  </data>
+  <data name="&gt;&gt;grdTemplate.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="gbTemplate.Location" type="System.Drawing.Point, System.Drawing">
+    <value>308, 3</value>
+  </data>
+  <data name="gbTemplate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>301, 290</value>
+  </data>
+  <data name="gbTemplate.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="gbTemplate.Text" xml:space="preserve">
+    <value>Templates:</value>
+  </data>
+  <data name="&gt;&gt;gbTemplate.Name" xml:space="preserve">
+    <value>gbTemplate</value>
+  </data>
+  <data name="&gt;&gt;gbTemplate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gbTemplate.Parent" xml:space="preserve">
+    <value>ReportType</value>
+  </data>
+  <data name="&gt;&gt;gbTemplate.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="rbSchema2005.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="rbSchema2005.Location" type="System.Drawing.Point, System.Drawing">
-    <value>248, 16</value>
+    <value>182, 16</value>
   </data>
   <data name="rbSchema2005.Size" type="System.Drawing.Size, System.Drawing">
-    <value>104, 16</value>
+    <value>56, 16</value>
   </data>
   <data name="rbSchema2005.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -706,10 +766,10 @@
     <value>NoControl</value>
   </data>
   <data name="rbSchema2003.Location" type="System.Drawing.Point, System.Drawing">
-    <value>120, 16</value>
+    <value>95, 16</value>
   </data>
   <data name="rbSchema2003.Size" type="System.Drawing.Size, System.Drawing">
-    <value>104, 16</value>
+    <value>56, 16</value>
   </data>
   <data name="rbSchema2003.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -736,7 +796,7 @@
     <value>8, 16</value>
   </data>
   <data name="rbSchemaNo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>104, 16</value>
+    <value>56, 16</value>
   </data>
   <data name="rbSchemaNo.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -760,7 +820,7 @@
     <value>10, 141</value>
   </data>
   <data name="groupBox2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>384, 40</value>
+    <value>292, 42</value>
   </data>
   <data name="groupBox2.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
@@ -778,7 +838,7 @@
     <value>ReportType</value>
   </data>
   <data name="&gt;&gt;groupBox2.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="cbOrientation.Items" xml:space="preserve">
     <value>Portrait (8.5" by 11")</value>
@@ -805,7 +865,7 @@
     <value>ReportType</value>
   </data>
   <data name="&gt;&gt;cbOrientation.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="label6.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -832,13 +892,13 @@
     <value>ReportType</value>
   </data>
   <data name="&gt;&gt;label6.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="tbReportAuthor.Location" type="System.Drawing.Point, System.Drawing">
     <value>90, 77</value>
   </data>
   <data name="tbReportAuthor.Size" type="System.Drawing.Size, System.Drawing">
-    <value>304, 20</value>
+    <value>212, 20</value>
   </data>
   <data name="tbReportAuthor.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
@@ -853,13 +913,13 @@
     <value>ReportType</value>
   </data>
   <data name="&gt;&gt;tbReportAuthor.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="tbReportDescription.Location" type="System.Drawing.Point, System.Drawing">
     <value>90, 45</value>
   </data>
   <data name="tbReportDescription.Size" type="System.Drawing.Size, System.Drawing">
-    <value>304, 20</value>
+    <value>212, 20</value>
   </data>
   <data name="tbReportDescription.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
@@ -874,13 +934,13 @@
     <value>ReportType</value>
   </data>
   <data name="&gt;&gt;tbReportDescription.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="tbReportName.Location" type="System.Drawing.Point, System.Drawing">
     <value>90, 13</value>
   </data>
   <data name="tbReportName.Size" type="System.Drawing.Size, System.Drawing">
-    <value>304, 20</value>
+    <value>212, 20</value>
   </data>
   <data name="tbReportName.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
@@ -895,7 +955,7 @@
     <value>ReportType</value>
   </data>
   <data name="&gt;&gt;tbReportName.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="label3.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -922,7 +982,7 @@
     <value>ReportType</value>
   </data>
   <data name="&gt;&gt;label3.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="label2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -949,7 +1009,7 @@
     <value>ReportType</value>
   </data>
   <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
   <data name="label1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -976,7 +1036,7 @@
     <value>ReportType</value>
   </data>
   <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>9</value>
   </data>
   <data name="ReportType.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 22</value>
@@ -1040,6 +1100,24 @@
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>New Report from Database</value>
+  </data>
+  <data name="&gt;&gt;col_GUID.Name" xml:space="preserve">
+    <value>col_GUID</value>
+  </data>
+  <data name="&gt;&gt;col_GUID.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;col_Selecionar.Name" xml:space="preserve">
+    <value>col_Selecionar</value>
+  </data>
+  <data name="&gt;&gt;col_Selecionar.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewCheckBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;col_Nome.Name" xml:space="preserve">
+    <value>col_Nome</value>
+  </data>
+  <data name="&gt;&gt;col_Nome.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>DialogDatabase</value>
