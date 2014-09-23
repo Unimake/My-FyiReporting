@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using OpenPOS.Model.Reports;
 using OpenPOS.Data.Reports;
-using System.Data.Generic;
+using Unimake.Data.Generic;
 
 namespace fyiReporting.RdlDesign
 {
@@ -138,15 +138,15 @@ namespace fyiReporting.RdlDesign
                 if (row.Cells[this.dgvNomeReal.Index].Value != null)
                     filtro.NomeReal = row.Cells[this.dgvNomeReal.Index].Value.ToString();
                 if (row.Cells[this.dgvClassificacao.Index].Value != null)
-                    filtro.Classificacao = OpenPOS.Convert.ToEnum<OrderByClassification>(row.Cells[this.dgvClassificacao.Index].Value.ToString());
+                    filtro.Classificacao = Unimake.Convert.ToEnum<OrderByClassification>(row.Cells[this.dgvClassificacao.Index].Value.ToString());
                 if (row.Cells[this.dgvTipo.Index].Value != null)
-                    filtro.Tipo = OpenPOS.Convert.ToEnum<GenericDbType>(row.Cells[this.dgvTipo.Index].Value.ToString());
+                    filtro.Tipo = Unimake.Convert.ToEnum<GenericDbType>(row.Cells[this.dgvTipo.Index].Value.ToString());
                 if (row.Cells[this.dgvObrigatorio.Index].Value != null)
                     filtro.Obrigatorio = Convert.ToBoolean(row.Cells[this.dgvObrigatorio.Index].Value);
                 if (row.Cells[this.dgvPadrao.Index].Value != null)
                     filtro.Padrao = Convert.ToBoolean(row.Cells[this.dgvPadrao.Index].Value.ToString());
                 if (row.Cells[this.dgvComparacao.Index].Value != null)
-                    filtro.Comparacao = OpenPOS.Convert.ToEnum<ComparisonType>(row.Cells[this.dgvComparacao.Index].Value.ToString());
+                    filtro.Comparacao = Unimake.Convert.ToEnum<ComparisonType>(row.Cells[this.dgvComparacao.Index].Value.ToString());
                 if (row.Cells[this.dgvVlr1.Index].Value != null)
                     filtro.Valor = row.Cells[this.dgvVlr1.Index].Value.ToString();
                 if (row.Cells[this.dgvVlr2.Index].Value != null)

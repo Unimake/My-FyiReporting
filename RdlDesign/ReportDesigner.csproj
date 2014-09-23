@@ -122,6 +122,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="OpenPOS.CommonTypes">
+      <HintPath>..\..\OpenPOS\OpenPOS\trunk\fontes\OpenPOS\Desktop\OpenPOS.Desktop\bin\Release\OpenPOS.CommonTypes.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenPOS.Core">
+      <HintPath>..\..\OpenPOS\OpenPOS\trunk\fontes\OpenPOS\Desktop\OpenPOS.Desktop\bin\Release\OpenPOS.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenPOS.Desktop.ComponentModel">
+      <HintPath>..\..\OpenPOS\OpenPOS\trunk\fontes\OpenPOS\Desktop\OpenPOS.Desktop\bin\Release\OpenPOS.Desktop.ComponentModel.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenPOS.Model">
+      <HintPath>..\..\OpenPOS\OpenPOS\trunk\fontes\OpenPOS\Desktop\OpenPOS.Desktop\bin\Release\OpenPOS.Model.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -141,6 +153,15 @@
     </Reference>
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
+    </Reference>
+    <Reference Include="Unimake">
+      <HintPath>..\..\OpenPOS\OpenPOS\trunk\fontes\OpenPOS\Desktop\OpenPOS.Desktop\bin\Release\Unimake.dll</HintPath>
+    </Reference>
+    <Reference Include="Unimake.CommonTypes">
+      <HintPath>..\..\OpenPOS\OpenPOS\trunk\fontes\OpenPOS\Desktop\OpenPOS.Desktop\bin\Release\Unimake.CommonTypes.dll</HintPath>
+    </Reference>
+    <Reference Include="Unimake.Data.Generic">
+      <HintPath>..\..\OpenPOS\OpenPOS\trunk\fontes\OpenPOS\Desktop\OpenPOS.Desktop\bin\Release\Unimake.Data.Generic.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -1057,30 +1078,6 @@
     <ProjectReference Include="..\RdlViewer\RdlViewer.csproj">
       <Project>{D99145B1-CB6C-41F5-BA86-723325145FB5}</Project>
       <Name>RdlViewer</Name>
-    </ProjectReference>
-    <ProjectReference Include="Z:\OpenPOS\OpenPOSBr\trunk\fontes\OpenPOS\CommonTypes\OpenPOS.CommonTypes\OpenPOS.CommonTypes.csproj">
-      <Project>{8aec5212-ecd6-42bd-b6f0-aaacda508c72}</Project>
-      <Name>OpenPOS.CommonTypes</Name>
-    </ProjectReference>
-    <ProjectReference Include="Z:\OpenPOS\OpenPOSBr\trunk\fontes\OpenPOS\Core\OpenPOS.Core\OpenPOS.Core.csproj">
-      <Project>{dc6b5290-e824-4bb4-a863-09945763ae95}</Project>
-      <Name>OpenPOS.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="Z:\OpenPOS\OpenPOSBr\trunk\fontes\OpenPOS\Desktop.ComponentModel\OpenPOS.Desktop.ComponentModel\OpenPOS.Desktop.ComponentModel.csproj">
-      <Project>{25b9c3b4-b1a8-41b6-a6ac-8d87229cd595}</Project>
-      <Name>OpenPOS.Desktop.ComponentModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="Z:\OpenPOS\OpenPOSBr\trunk\fontes\OpenPOS\Model\OpenPOS.Model\OpenPOS.Model.csproj">
-      <Project>{f32bfb09-cdfd-4539-8124-881c7adbd19e}</Project>
-      <Name>OpenPOS.Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="Z:\OpenPOS\OpenPOS\trunk\fontes\OpenPOS\Unimake\Unimake\Unimake.csproj">
-      <Project>{6b631b34-c2de-4c70-9d21-02d698ca853c}</Project>
-      <Name>Unimake</Name>
-    </ProjectReference>
-    <ProjectReference Include="Z:\OpenPOS\OpenPOS\trunk\fontes\System\Data\Generic\System.Data.Generic\System.Data.Generic.csproj">
-      <Project>{3a915c55-c947-43b7-97e8-c2a356ca385c}</Project>
-      <Name>System.Data.Generic</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

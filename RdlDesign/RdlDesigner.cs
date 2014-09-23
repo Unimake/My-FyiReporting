@@ -811,7 +811,7 @@ namespace fyiReporting.RdlDesign
 
                 using(FileStream stream = File.OpenWrite(file.LocalPath))
                 {
-                    byte[] bArray = OpenPOS.Convert.ToByteArray(relatorio.Script);
+                    byte[] bArray = Unimake.Convert.ToByteArray(relatorio.Script);
                     stream.Write(bArray, 0, bArray.Length);
                     stream.Flush();
                     stream.Close();

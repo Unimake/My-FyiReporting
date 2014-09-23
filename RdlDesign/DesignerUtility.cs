@@ -37,9 +37,10 @@ using System.Text.RegularExpressions;
 using Microsoft.Win32;
 using fyiReporting.RDL;
 using fyiReporting.RdlDesign.Resources;
-using System.Data.Generic;
-using System.Data.Generic.Schema;
 using System.Linq;
+using Unimake.Data.Generic.Definitions;
+using Unimake.Data.Generic.Schema;
+using Unimake.Data.Generic;
 
 namespace fyiReporting.RdlDesign
 {
@@ -688,7 +689,7 @@ namespace fyiReporting.RdlDesign
             return newPath;
         }
 
-        public static OpenPOS.Model.Desktop.IDisplayValues DisplayReports()
+        public static IDisplayValues DisplayReports()
         {
             return new OpenPOS.Data.Reports.Relatorio().GetDisplayValues();
         }
