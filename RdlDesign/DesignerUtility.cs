@@ -339,30 +339,29 @@ namespace fyiReporting.RdlDesign
 
         public static List<SqlColumn> GetSqlColumns(string sql, IList parameters)
         {
+            Connection connection = null;
             List<SqlColumn> cols = new List<SqlColumn>();
+            Command cmSQL = null;
+            DataReader dr = null;
+            Cursor saveCursor = Cursor.Current;
 
-            Connection connection = new Connection(@"Data Source=U:\Documentacoes_Equipe_ERP\OpenPOS\database\openpos.db;Version=3;");
-            connection.Open();
-            Tables tables = Tables.GetTables(connection);
-
-            if(tables.Contains(sql))
+            try
             {
+                connection = DbContext.CreateConnection(true, true);
+                Tables tables = Tables.GetTables(connection);
 
-                cols = new List<SqlColumn>(from c in tables[sql].Fields
-                                           select new SqlColumn
-                                           {
-                                               Name = c.Name,
-                                               DataType = c.GetFieldType()
-                                           });
-            }
-            else
-            {
-                Command cmSQL = null;
-                DataReader dr = null;
-                Cursor saveCursor = Cursor.Current;
-                Cursor.Current = Cursors.WaitCursor;
-                try
+                if(tables.Contains(sql))
                 {
+                    cols = new List<SqlColumn>(from c in tables[sql].Fields
+                                               select new SqlColumn
+                                               {
+                                                   Name = c.Name,
+                                                   DataType = c.GetFieldType()
+                                               });
+                }
+                else
+                {
+                    Cursor.Current = Cursors.WaitCursor;
                     cmSQL = connection.CreateCommand();
                     cmSQL.CommandText = sql;
                     AddParameters(cmSQL, parameters);
@@ -374,30 +373,31 @@ namespace fyiReporting.RdlDesign
                         sc.DataType = dr.GetFieldType(i);
                         cols.Add(sc);
                     }
+
                 }
-                catch(SqlException sqle)
+            }
+            catch(SqlException sqle)
+            {
+                MessageBox.Show(sqle.Message, Strings.DesignerUtility_Show_SQLError);
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show(e.InnerException == null ? e.Message : e.InnerException.Message, Strings.DesignerUtility_Show_Error);
+            }
+            finally
+            {
+                if(connection != null)
                 {
-                    MessageBox.Show(sqle.Message, Strings.DesignerUtility_Show_SQLError);
-                }
-                catch(Exception e)
-                {
-                    MessageBox.Show(e.InnerException == null ? e.Message : e.InnerException.Message, Strings.DesignerUtility_Show_Error);
-                }
-                finally
-                {
-                    if(connection != null)
+                    if(cmSQL != null)
                     {
-                        if(cmSQL != null)
-                        {
-                            cmSQL.Dispose();
-                            if(dr != null)
-                                dr.Close();
-                        }
-                        connection.Close();
-                        connection.Dispose();
+                        cmSQL.Dispose();
+                        if(dr != null)
+                            dr.Close();
                     }
-                    Cursor.Current = saveCursor;
+                    connection.Close();
+                    connection.Dispose();
                 }
+                Cursor.Current = saveCursor;
             }
             return cols;
         }
