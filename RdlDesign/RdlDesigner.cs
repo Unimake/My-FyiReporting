@@ -3868,7 +3868,7 @@ namespace fyiReporting.RdlDesign
             MDIChild mc = this.ActiveMdiChild as MDIChild;
             if(mc == null)
             {
-                OpenPOS.MessageBox.ShowWarning("No report was selected");
+                Unimake.MessageBox.ShowWarning("No report was selected");
                 return;
             }
 

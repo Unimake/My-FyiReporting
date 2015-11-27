@@ -568,11 +568,11 @@ namespace fyiReporting.RdlDesign
         {
             if(Editor.CurrentReport == null)
             {
-                OpenPOS.MessageBox.ShowWarning("No report was selected");
+                Unimake.MessageBox.ShowWarning("No report was selected");
                 return false;
             }
 
-            if(OpenPOS.MessageBox.AskYesNo("Are you sure to delete the current report?", "Delete report") == System.Windows.Forms.DialogResult.Yes)
+            if(Unimake.MessageBox.AskYesNo("Are you sure to delete the current report?", "Delete report") == System.Windows.Forms.DialogResult.Yes)
             {
                 Editor.CurrentReport.Delete();
                 return true;

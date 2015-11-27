@@ -159,7 +159,7 @@ namespace fyiReporting.RdlDesign
             this.grdFiltros.ShowToolbarGridPanel = false;
             this.grdFiltros.Size = new System.Drawing.Size(625, 135);
             this.grdFiltros.TabIndex = 0;
-            this.grdFiltros.TipoFiltro = OpenPOS.Desktop.ComponentModel.GridPanelTipoFiltro.Nenhuma;
+            this.grdFiltros.FilterType = OpenPOS.Desktop.ComponentModel.GridPanelFilterType.None;
             // 
             // dgvGUID
             // 

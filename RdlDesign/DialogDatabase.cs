@@ -495,7 +495,7 @@ namespace fyiReporting.RdlDesign
                         sb.Append(GetDataProvider());
                         break;
                     case "connectstring":
-                        sb.Append(Unimake.Data.Generic.Configuration.DataGenericSettings.Settings.ConnectionString);
+                        sb.Append(Unimake.Data.Generic.Configuration.DataGenericSettings.Settings.ConnectionStrings[0].ConnectionString);
                         break;
                     case "columncount":
                         sb.Append(_ColumnList.Count);
@@ -838,8 +838,8 @@ namespace fyiReporting.RdlDesign
 
         private string GetDataProvider()
         {
-            _StashConnection = Unimake.Data.Generic.Configuration.DataGenericSettings.Settings.ConnectionString;
-            return Unimake.Data.Generic.Configuration.DataGenericSettings.Settings.DatabaseType.ToString();
+            _StashConnection = Unimake.Data.Generic.Configuration.DataGenericSettings.Settings.ConnectionStrings[0].ConnectionString;
+            return Unimake.Data.Generic.Configuration.DataGenericSettings.Settings.ConnectionStrings[0].DatabaseType.ToString();
         }
 
         private string GetDataConnection()

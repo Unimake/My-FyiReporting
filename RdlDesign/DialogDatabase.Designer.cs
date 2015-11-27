@@ -312,7 +312,7 @@ namespace fyiReporting.RdlDesign
             this.grdTemplate.ShowEditingIcon = true;
             this.grdTemplate.ShowRowErrors = false;
             this.grdTemplate.ShowToolbarGridPanel = false;
-            this.grdTemplate.TipoFiltro = OpenPOS.Desktop.ComponentModel.GridPanelTipoFiltro.Simples;
+            this.grdTemplate.FilterType = OpenPOS.Desktop.ComponentModel.GridPanelFilterType.Simple;
             this.grdTemplate.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.grdTemplate_CellBeginEdit);
             // 
             // groupBox2

@@ -115,19 +115,19 @@ namespace fyiReporting.RdlDesign
             {
                 if (row.Cells[this.dgvApelido.Index].Value == null)
                 {
-                    OpenPOS.MessageBox.Show("Obrigatório informar o \"Apelido\" na linha selecionada.", MessageBoxIcon.Exclamation);
+                    Unimake.MessageBox.Show("Obrigatório informar o \"Apelido\" na linha selecionada.", MessageBoxIcon.Exclamation);
                     row.Selected = true;
                     return;
                 }
                 if (row.Cells[this.dgvNomeReal.Index].Value == null)
                 {
-                    OpenPOS.MessageBox.Show("Obrigatório informar o \"NomeReal\" na linha selecionada.", MessageBoxIcon.Exclamation);
+                    Unimake.MessageBox.Show("Obrigatório informar o \"NomeReal\" na linha selecionada.", MessageBoxIcon.Exclamation);
                     row.Selected = true;
                     return;
                 }
                 if (row.Cells[this.dgvTipo.Index].Value == null)
                 {
-                    OpenPOS.MessageBox.Show("Obrigatório informar o \"Tipo\" na linha selecionada.", MessageBoxIcon.Exclamation);
+                    Unimake.MessageBox.Show("Obrigatório informar o \"Tipo\" na linha selecionada.", MessageBoxIcon.Exclamation);
                     row.Selected = true;
                     return;
                 }
