@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
     <ProductVersion>9.0.30729</ProductVersion>
@@ -41,7 +41,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -1066,6 +1066,10 @@
       <Project>{f32bfb09-cdfd-4539-8124-881c7adbd19e}</Project>
       <Name>OpenPOS.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\OpenPOS\OpenPOS\trunk\fontes\OpenPOS\Reports\OpenPOS.Reports\OpenPOS.Reports.csproj">
+      <Project>{51944c36-aede-4a06-b942-2da0efec2671}</Project>
+      <Name>OpenPOS.Reports</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Unimake.Framework\Unimake.Framework.svn\trunk\C#\source\Unimake.Data.Generic\FW_4.0\Unimake.Data.Generic\Unimake.Data.Generic.csproj">
       <Project>{3928d693-615e-4938-8972-3bf05e89c09a}</Project>
       <Name>Unimake.Data.Generic</Name>
@@ -1078,20 +1082,20 @@
       <Project>{1439f4a5-592d-4110-bb9b-5fdf5f7f44c3}</Project>
       <Name>Unimake.Framework</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DataProviders\DataProviders.csproj">
-      <Project>{d9f4197f-52d2-49f0-8daf-e2884733cf2d}</Project>
-      <Name>DataProviders</Name>
-    </ProjectReference>
     <ProjectReference Include="..\RdlCri\RdlCri.csproj">
       <Project>{9C9ECACA-0DEB-4517-8CF1-02C3D3EB128E}</Project>
       <Name>RdlCri</Name>
     </ProjectReference>
     <ProjectReference Include="..\RdlEngine\RdlEngine.csproj">
-      <Project>{C97E91F4-B310-44E2-9B6C-96775395722D}</Project>
+      <Project>{c97e91f4-b310-44e2-9b6c-96775395722d}</Project>
       <Name>RdlEngine</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RdlViewer\RdlReader\RdlReader.csproj">
+      <Project>{2412e381-d3d9-4ab7-a2fa-02d9786260f0}</Project>
+      <Name>RdlReader</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RdlViewer\RdlViewer.csproj">
-      <Project>{D99145B1-CB6C-41F5-BA86-723325145FB5}</Project>
+      <Project>{d99145b1-cb6c-41f5-ba86-723325145fb5}</Project>
       <Name>RdlViewer</Name>
     </ProjectReference>
   </ItemGroup>

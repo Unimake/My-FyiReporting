@@ -356,7 +356,7 @@ namespace fyiReporting.RdlDesign
                                                select new SqlColumn
                                                {
                                                    Name = c.Name,
-                                                   DataType = c.GetFieldType()
+                                                   DataType = c.GenericDbType.GetTypeValue()
                                                });
                 }
                 else
