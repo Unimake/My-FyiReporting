@@ -41,7 +41,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -130,6 +130,18 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="OpenPOS.CommonTypes">
+      <HintPath>..\..\OpenPOS\OpenPOS\trunk\fontes\OpenPOS\Desktop\OpenPOS.Desktop\bin\Release\OpenPOS.CommonTypes.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenPOS.Core">
+      <HintPath>..\..\OpenPOS\OpenPOS\trunk\fontes\OpenPOS\Desktop\OpenPOS.Desktop\bin\Release\OpenPOS.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenPOS.Desktop.ComponentModel">
+      <HintPath>..\..\OpenPOS\OpenPOS\trunk\fontes\OpenPOS\Desktop\OpenPOS.Desktop\bin\Release\OpenPOS.Desktop.ComponentModel.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenPOS.Model">
+      <HintPath>..\..\OpenPOS\OpenPOS\trunk\fontes\OpenPOS\Desktop\OpenPOS.Desktop\bin\Release\OpenPOS.Model.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -149,6 +161,15 @@
     </Reference>
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
+    </Reference>
+    <Reference Include="Unimake.Data.Generic">
+      <HintPath>..\..\Unimake.Framework\Unimake.Framework.svn\trunk\C#\source\Compilacao\Unimake.Data.Generic.dll</HintPath>
+    </Reference>
+    <Reference Include="Unimake.Framework">
+      <HintPath>..\..\Unimake.Framework\Unimake.Framework.svn\trunk\C#\source\Compilacao\Unimake.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Unimake.Framework.CommonTypes">
+      <HintPath>..\..\Unimake.Framework\Unimake.Framework.svn\trunk\C#\source\Compilacao\Unimake.Framework.CommonTypes.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -1050,38 +1071,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\OpenPOS\OpenPOS\trunk\fontes\OpenPOS\CommonTypes\OpenPOS.CommonTypes\OpenPOS.CommonTypes.csproj">
-      <Project>{8aec5212-ecd6-42bd-b6f0-aaacda508c72}</Project>
-      <Name>OpenPOS.CommonTypes</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\OpenPOS\OpenPOS\trunk\fontes\OpenPOS\Core\OpenPOS.Core\OpenPOS.Core.csproj">
-      <Project>{dc6b5290-e824-4bb4-a863-09945763ae95}</Project>
-      <Name>OpenPOS.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\OpenPOS\OpenPOS\trunk\fontes\OpenPOS\Desktop.ComponentModel\OpenPOS.Desktop.ComponentModel\OpenPOS.Desktop.ComponentModel.csproj">
-      <Project>{25b9c3b4-b1a8-41b6-a6ac-8d87229cd595}</Project>
-      <Name>OpenPOS.Desktop.ComponentModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\OpenPOS\OpenPOS\trunk\fontes\OpenPOS\Model\OpenPOS.Model\OpenPOS.Model.csproj">
-      <Project>{f32bfb09-cdfd-4539-8124-881c7adbd19e}</Project>
-      <Name>OpenPOS.Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\OpenPOS\OpenPOS\trunk\fontes\OpenPOS\Reports\OpenPOS.Reports\OpenPOS.Reports.csproj">
-      <Project>{51944c36-aede-4a06-b942-2da0efec2671}</Project>
-      <Name>OpenPOS.Reports</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Unimake.Framework\Unimake.Framework.svn\trunk\C#\source\Unimake.Data.Generic\FW_4.0\Unimake.Data.Generic\Unimake.Data.Generic.csproj">
-      <Project>{3928d693-615e-4938-8972-3bf05e89c09a}</Project>
-      <Name>Unimake.Data.Generic</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Unimake.Framework\Unimake.Framework.svn\trunk\C#\source\Unimake.Framework.CommonTypes\Unimake.Framework.CommonTypes\Unimake.Framework.CommonTypes.csproj">
-      <Project>{b265a82e-4c4b-4a84-a5af-bfa8f815a6bb}</Project>
-      <Name>Unimake.Framework.CommonTypes</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Unimake.Framework\Unimake.Framework.svn\trunk\C#\source\Unimake.Framework\Unimake.Framework.csproj">
-      <Project>{1439f4a5-592d-4110-bb9b-5fdf5f7f44c3}</Project>
-      <Name>Unimake.Framework</Name>
-    </ProjectReference>
     <ProjectReference Include="..\RdlCri\RdlCri.csproj">
       <Project>{9C9ECACA-0DEB-4517-8CF1-02C3D3EB128E}</Project>
       <Name>RdlCri</Name>
@@ -1104,7 +1093,8 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>if "$(ConfigurationName)" == "Debug" GOTO doNothing
+START $(SolutionDir)Send2OpenPOS.bat
+:doNothing</PostBuildEvent>
   </PropertyGroup>
 </Project>

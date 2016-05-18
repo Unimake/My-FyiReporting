@@ -27,29 +27,29 @@ namespace fyiReporting.RdlDesign
                 this.dgvTipo.Populate(from x in Enum.GetValues(typeof(GenericDbType)).Cast<GenericDbType>()
                                       select new
                                       {
-                                          value = Convert.ToString(x),
-                                          text = Convert.ToString(x)
+                                          value = Unimake.Convert.ToString(x),
+                                          text = Unimake.Convert.ToString(x)
                                       });
 
                 this.dgvComparacao.Populate(from x in Enum.GetValues(typeof(ComparisonType)).Cast<ComparisonType>()
                                             select new
                                             {
-                                                value = Convert.ToString(x),
-                                                text = Convert.ToString(x)
+                                                value = Unimake.Convert.ToString(x),
+                                                text = Unimake.Convert.ToString(x)
                                             });
 
                 this.dgvClassificacao.Populate(from x in Enum.GetValues(typeof(OrderByClassification)).Cast<OrderByClassification>()
                                                select new
                                                {
-                                                   value = Convert.ToString(x),
-                                                   text = Convert.ToString(x)
+                                                   value = Unimake.Convert.ToString(x),
+                                                   text = Unimake.Convert.ToString(x)
                                                });
 
                 this.dgvNomeReal.Populate(from x in colunas
                                           select new
                                           {
-                                              value = Convert.ToString(x),
-                                              text = Convert.ToString(x)
+                                              value = Unimake.Convert.ToString(x),
+                                              text = Unimake.Convert.ToString(x)
                                           });
 
                 grdFiltros.Populate();
@@ -67,12 +67,12 @@ namespace fyiReporting.RdlDesign
                         {
                             item,
                             item.Apelido,
-                            Convert.ToString(item.NomeReal),
-                            Convert.ToString(item.Tipo),
-                            Convert.ToBoolean(item.Obrigatorio),
+                            Unimake.Convert.ToString(item.NomeReal),
+                            Unimake.Convert.ToString(item.Tipo),
+                            Unimake.Convert.ToBoolean(item.Obrigatorio),
                             item.Valor,
-                            Convert.ToString(item.Comparacao),
-                            Convert.ToString(item.Classificacao),
+                            Unimake.Convert.ToString(item.Comparacao),
+                            Unimake.Convert.ToString(item.Classificacao),
                             item.Valor,
                             item.Valor2
                         });
@@ -142,9 +142,9 @@ namespace fyiReporting.RdlDesign
                 if (row.Cells[this.dgvTipo.Index].Value != null)
                     filtro.Tipo = Unimake.Convert.ToEnum<GenericDbType>(row.Cells[this.dgvTipo.Index].Value.ToString());
                 if (row.Cells[this.dgvObrigatorio.Index].Value != null)
-                    filtro.Obrigatorio = Convert.ToBoolean(row.Cells[this.dgvObrigatorio.Index].Value);
+                    filtro.Obrigatorio = Unimake.Convert.ToBoolean(row.Cells[this.dgvObrigatorio.Index].Value);
                 if (row.Cells[this.dgvPadrao.Index].Value != null)
-                    filtro.Padrao = Convert.ToBoolean(row.Cells[this.dgvPadrao.Index].Value.ToString());
+                    filtro.Padrao = Unimake.Convert.ToBoolean(row.Cells[this.dgvPadrao.Index].Value.ToString());
                 if (row.Cells[this.dgvComparacao.Index].Value != null)
                     filtro.Comparacao = Unimake.Convert.ToEnum<ComparisonType>(row.Cells[this.dgvComparacao.Index].Value.ToString());
                 if (row.Cells[this.dgvVlr1.Index].Value != null)

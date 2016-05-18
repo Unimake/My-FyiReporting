@@ -37,7 +37,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -264,6 +264,7 @@
     </Compile>
     <Compile Include="Definition\ChartMap.cs" />
     <Compile Include="Definition\ChartMapData.cs" />
+    <Compile Include="Definition\QueryHelper.cs" />
     <Compile Include="Definition\DynamicExpression.cs" />
     <Compile Include="Definition\Corner.cs">
       <SubType>Code</SubType>
