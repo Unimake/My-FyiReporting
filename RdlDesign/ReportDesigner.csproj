@@ -1072,23 +1072,22 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RdlCri\RdlCri.csproj">
-      <Project>{9C9ECACA-0DEB-4517-8CF1-02C3D3EB128E}</Project>
+      <Project>{9c9ecaca-0deb-4517-8cf1-02c3d3eb128e}</Project>
       <Name>RdlCri</Name>
     </ProjectReference>
     <ProjectReference Include="..\RdlEngine\RdlEngine.csproj">
       <Project>{c97e91f4-b310-44e2-9b6c-96775395722d}</Project>
       <Name>RdlEngine</Name>
     </ProjectReference>
-    <ProjectReference Include="..\RdlViewer\RdlReader\RdlReader.csproj">
-      <Project>{2412e381-d3d9-4ab7-a2fa-02d9786260f0}</Project>
-      <Name>RdlReader</Name>
+    <ProjectReference Include="..\RdlMapFile\RdlMapFile.csproj">
+      <Project>{342676da-226d-437f-aac2-2fea68ebc466}</Project>
+      <Name>RdlMapFile</Name>
     </ProjectReference>
     <ProjectReference Include="..\RdlViewer\RdlViewer.csproj">
       <Project>{d99145b1-cb6c-41f5-ba86-723325145fb5}</Project>
       <Name>RdlViewer</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

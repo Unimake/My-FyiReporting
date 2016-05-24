@@ -127,7 +127,6 @@ namespace fyiReporting.RDL
             _DataSourceDefn = ds;
 
             IDbConnection cnSQL = QueryHelper.Connection;
-
             if(cnSQL == null)
             {
                 cnSQL = ds.SqlConnect(null);
@@ -136,7 +135,7 @@ namespace fyiReporting.RDL
             }
 
             // Treat this as a SQL statement
-            String sql = _CommandText.EvaluateString(null, null);
+            String sql = _CommandText?.EvaluateString(null, null) ?? QueryHelper.Command?.CommandText;
             IDbCommand cmSQL = QueryHelper.Command;
             IDataReader dr = null;
             try
@@ -206,7 +205,7 @@ namespace fyiReporting.RDL
                 return false;
             }
 
-            IDbConnection cnSQL = ds.SqlConnect(rpt);
+            IDbConnection cnSQL = RdlEngine.Definition.QueryHelper.Connection ?? ds.SqlConnect(rpt);
             if(cnSQL == null)
             {
                 this.SetMyData(rpt, null);
@@ -215,18 +214,22 @@ namespace fyiReporting.RDL
 
             Rows _Data = new Rows(rpt, null, null, null);       // no sorting and grouping at base data
             String sql = _CommandText.EvaluateString(rpt, null);
-            IDbCommand cmSQL = null;
+            IDbCommand cmSQL = QueryHelper.Command;
             IDataReader dr = null;
             try
             {
-                cmSQL = cnSQL.CreateCommand();
-                cmSQL.CommandText = AddParametersAsLiterals(rpt, cnSQL, sql, true);
-                if(this._QueryCommandType == QueryCommandTypeEnum.StoredProcedure)
-                    cmSQL.CommandType = CommandType.StoredProcedure;
-                if(this._Timeout > 0)
-                    cmSQL.CommandTimeout = this._Timeout;
+                if(cmSQL == null)
+                {
+                    cmSQL = cnSQL.CreateCommand();
+                    cmSQL.CommandText = AddParametersAsLiterals(rpt, cnSQL, sql, true);
+                    if(this._QueryCommandType == QueryCommandTypeEnum.StoredProcedure)
+                        cmSQL.CommandType = CommandType.StoredProcedure;
+                    if(this._Timeout > 0)
+                        cmSQL.CommandTimeout = this._Timeout;
 
-                AddParameters(rpt, cnSQL, cmSQL, true);
+                    AddParameters(rpt, cnSQL, cmSQL, true);
+                }
+
                 dr = cmSQL.ExecuteReader(CommandBehavior.SingleResult);
 
                 List<Row> ar = new List<Row>();
