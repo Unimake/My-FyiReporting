@@ -1,0 +1,356 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{464C1A6C-114F-4DFF-BC69-A87C88277748}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>Reports.Test</AssemblyName>
+    <AssemblyOriginatorKeyFile>..\mykey.snk</AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Reports.Test</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <SignAssembly>false</SignAssembly>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BaseAddress>285212672</BaseAddress>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BaseAddress>285212672</BaseAddress>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <FileAlignment>4096</FileAlignment>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <FileAlignment>4096</FileAlignment>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <Optimize>true</Optimize>
+    <FileAlignment>4096</FileAlignment>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <DebugType>none</DebugType>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;IsPAF</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <FileAlignment>4096</FileAlignment>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <Optimize>true</Optimize>
+    <FileAlignment>4096</FileAlignment>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <DebugType>none</DebugType>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="OpenPOS.CommonTypes, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\OpenPOS\OpenPOS\trunk\fontes\OpenPOS\Desktop\OpenPOS.Desktop\bin\Release\OpenPOS.CommonTypes.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenPOS.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\OpenPOS\OpenPOS\trunk\fontes\OpenPOS\Desktop\OpenPOS.Desktop\bin\Release\OpenPOS.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenPOS.Desktop.ComponentModel, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\OpenPOS\OpenPOS\trunk\fontes\OpenPOS\Desktop\OpenPOS.Desktop\bin\Release\OpenPOS.Desktop.ComponentModel.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenPOS.Model, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\OpenPOS\OpenPOS\trunk\fontes\OpenPOS\Desktop\OpenPOS.Desktop\bin\Release\OpenPOS.Model.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Windows.Forms">
+      <Name>System.Windows.Forms</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Unimake.Data.Generic, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cf63a6db544292d2, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Unimake.Framework\Unimake.Framework.svn\trunk\C#\source\Compilacao\Unimake.Data.Generic.dll</HintPath>
+    </Reference>
+    <Reference Include="Unimake.Framework">
+      <HintPath>..\..\Unimake.Framework\Unimake.Framework.svn\trunk\C#\source\Compilacao\Unimake.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Unimake.Framework.CommonTypes">
+      <HintPath>..\..\Unimake.Framework\Unimake.Framework.svn\trunk\C#\source\Compilacao\Unimake.Framework.CommonTypes.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Exceptions\Exceptions.cs" />
+    <Compile Include="ExtensionsMethods\EnumerableFilterItem.cs" />
+    <Compile Include="frmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmMain.Designer.cs">
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="RdlDesign\Forms\DialogFilter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RdlDesign\Forms\DialogFilter.designer.cs">
+      <DependentUpon>DialogFilter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RdlManager.cs" />
+    <Compile Include="RdlReader.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RdlReader.designer.cs">
+      <DependentUpon>RdlReader.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RdlReader\MDIChild.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RdlReader\MDIChild.designer.cs">
+      <DependentUpon>MDIChild.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RdlReader\ZoomTo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RdlReader\ZoomTo.designer.cs">
+      <DependentUpon>ZoomTo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Strings.Designer.cs" />
+    <EmbeddedResource Include="frmMain.resx">
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RdlDesign\Forms\DialogFilter.resx">
+      <DependentUpon>DialogFilter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RdlReader.resx">
+      <DependentUpon>RdlReader.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RdlReader.ru-RU.resx">
+      <DependentUpon>RdlReader.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RdlReader\MDIChild.resx">
+      <DependentUpon>MDIChild.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RdlReader\ZoomTo.resx">
+      <DependentUpon>ZoomTo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RdlReader\ZoomTo.ru-RU.resx">
+      <DependentUpon>ZoomTo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Strings.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Strings.ru-RU.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\calign.gif" />
+    <Content Include="Images\chart.gif" />
+    <Content Include="Images\chart.png" />
+    <Content Include="Images\copy.gif" />
+    <Content Include="Images\csv.gif" />
+    <Content Include="Images\cut.gif" />
+    <Content Include="Images\document-new.png" />
+    <Content Include="Images\document-open.png" />
+    <Content Include="Images\document-print.png" />
+    <Content Include="Images\document-save.png" />
+    <Content Include="Images\edit-copy.png" />
+    <Content Include="Images\edit-cut.png" />
+    <Content Include="Images\edit-paste.png" />
+    <Content Include="Images\edit-undo.png" />
+    <Content Include="Images\excel.gif" />
+    <Content Include="Images\format-justify-center.png" />
+    <Content Include="Images\format-justify-fill.png" />
+    <Content Include="Images\format-justify-left.png" />
+    <Content Include="Images\format-justify-right.png" />
+    <Content Include="Images\format-text-bold.png" />
+    <Content Include="Images\format-text-italic.png" />
+    <Content Include="Images\format-text-underline.png" />
+    <Content Include="Images\html.gif" />
+    <Content Include="Images\image.gif" />
+    <Content Include="Images\Image.png" />
+    <Content Include="Images\lalign.gif" />
+    <Content Include="Images\line.gif" />
+    <Content Include="Images\list.gif" />
+    <Content Include="Images\matrix.gif" />
+    <Content Include="Images\mht.gif" />
+    <Content Include="Images\new.gif" />
+    <Content Include="Images\open.gif" />
+    <Content Include="Images\paste.gif" />
+    <Content Include="Images\pdf.gif" />
+    <Content Include="Images\print.gif" />
+    <Content Include="Images\ralign.gif" />
+    <Content Include="Images\rectangle.gif" />
+    <Content Include="Images\rtf.gif" />
+    <Content Include="Images\save.gif" />
+    <Content Include="Images\selecttool.gif" />
+    <Content Include="Images\subreport.gif" />
+    <Content Include="Images\table.gif" />
+    <Content Include="Images\text.gif" />
+    <Content Include="Images\tif.gif" />
+    <Content Include="Images\undo.gif" />
+    <Content Include="Images\xml.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RdlCri\RdlCri.csproj">
+      <Project>{9c9ecaca-0deb-4517-8cf1-02c3d3eb128e}</Project>
+      <Name>RdlCri</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RdlEngine\RdlEngine.csproj">
+      <Project>{c97e91f4-b310-44e2-9b6c-96775395722d}</Project>
+      <Name>RdlEngine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RdlViewer\RdlViewer.csproj">
+      <Project>{d99145b1-cb6c-41f5-ba86-723325145fb5}</Project>
+      <Name>RdlViewer</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>
